@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="About | AI Experiments"
+  description="Learn more about this projects and research blog"
+>
+  <div class="container">
+    <article class="about-content">
+      <h1 class="title">About</h1>
+      
+      <div class="content">
+        <p class="lead">
+          Welcome to my research blog, a collection of projects, experiments, and observations 
+          across security, software, and intelligent systems.
+        </p>
+        
+        <h2>What You'll Find Here</h2>
+        <p>
+          This blog documents hands on technical work, from small proof of concept projects 
+          to deeper investigations into how real systems behave, fail, and interact in practice. 
+          Each post focuses on what I learned, what worked, what did not, and why that matters.
+        </p>
+        
+        <h2>The Approach</h2>
+        <p>
+          I value both theory and practice. Understanding concepts at a deep level is just as 
+          important to me as testing them in real systems, so this blog reflects a mix of 
+          analytical thinking and hands-on exploration. I study the ideas behind these technologies, 
+          then examine how they behave when built, stressed, or applied in real contexts.
+
+          Topics range from security engineering and system behavior to theoretical models, 
+          machine learning concepts, automation, and tooling. The goal is always to draw out clear, 
+          practical insights while also appreciating the underlying principles that shape how these systems work.
+        </p>
+        
+        <p>
+          Topics range from security engineering and system behavior to applications of machine learning, 
+          automation, and tooling. The emphasis is always on practical insight that you can apply in your 
+          own projects or research.
+        </p>
+        
+        <h2>Connect</h2>
+        <p>
+          If you are interested in discussing these projects, security and AI, or possible collaborations, 
+          feel free to reach out or explore the work shared here.
+        </p>
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  
+  .about-content {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .title {
+    font-size: 4rem;
+    margin-bottom: 3rem;
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  
+  .lead {
+    font-size: 1.35rem;
+    color: var(--color-text-muted);
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+  
+  .content h2 {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+  
+  .content p {
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+  
+  .cta {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .btn {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(240, 93, 35, 0.2);
+  }
+  
+  .btn:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(240, 93, 35, 0.3);
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 2rem 1.5rem;
+    }
+    
+    .title {
+      font-size: 2.5rem;
+    }
+    
+    .lead {
+      font-size: 1.2rem;
+    }
+    
+    .content {
+      font-size: 1rem;
+    }
+  }
+</style>

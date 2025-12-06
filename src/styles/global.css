@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap');
+
+:root {
+  --color-primary: #F05D23;
+  --color-primary-dark: #D04A1A;
+  --color-bg: #FAF8F5;
+  --color-bg-card: #FFFFFF;
+  --color-text: #1A1A1A;
+  --color-text-muted: #6B6B6B;
+  --color-border: #E8E5DF;
+  
+  --font-display: 'Crimson Pro', serif;
+  --font-body: 'DM Sans', sans-serif;
+  
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 3.5rem;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 2rem;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+p {
+  margin-bottom: 1.125rem;
+}
+
+code {
+  background: #FFF5ED;
+  color: #D04A1A;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+pre {
+  background: #FFF5ED !important;
+  border: 1px solid #FFE4D1 !important;
+  color: var(--color-text) !important;
+  padding: 1.5rem !important;
+  padding-top: 3rem !important;
+  border-radius: 10px !important;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(240, 93, 35, 0.08) !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-weight: 400;
+}
+
+/* Copy button container */
+pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 3rem;
+  background: linear-gradient(to bottom, #FFF5ED, transparent);
+  border-radius: 10px 10px 0 0;
+  pointer-events: none;
+}
+
+/* Syntax highlighting for orange theme */
+pre code .token.comment {
+  color: #999;
+  font-style: italic;
+}
+
+pre code .token.keyword,
+pre code .token.selector {
+  color: #F05D23;
+  font-weight: 600;
+}
+
+pre code .token.string,
+pre code .token.attr-value {
+  color: #2D5A7B;
+}
+
+pre code .token.function,
+pre code .token.class-name {
+  color: #D04A1A;
+}
+
+pre code .token.number,
+pre code .token.boolean {
+  color: #70A37F;
+}
+
+pre code .token.operator,
+pre code .token.punctuation {
+  color: #6B6B6B;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: white;
+}

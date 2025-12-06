@@ -1,0 +1,108 @@
+---
+// Component to add copy buttons to code blocks
+---
+
+<script>
+  function addCopyButtons() {
+    const codeBlocks = document.querySelectorAll('pre');
+
+    codeBlocks.forEach((pre) => {
+      // Skip if button already exists
+      if (pre.querySelector('.copy-button')) return;
+
+      const button = document.createElement('button');
+      button.className = 'copy-button';
+      button.innerHTML = `
+        <svg class="copy-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M5.5 3.5H2.5C2.22386 3.5 2 3.72386 2 4V13.5C2 13.7761 2.22386 14 2.5 14H11.5C11.7761 14 12 13.7761 12 13.5V10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M14 2H7C6.44772 2 6 2.44772 6 3V9C6 9.55228 6.44772 10 7 10H14C14.5523 10 15 9.55228 15 9V3C15 2.44772 14.5523 2 14 2Z" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <span class="copy-text">Copy</span>
+        <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M13 4L6 11L3 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      `;
+
+      button.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+
+        const text = code.textContent || '';
+
+        try {
+          await navigator.clipboard.writeText(text);
+
+          // Show success state
+          button.classList.add('copied');
+
+          setTimeout(() => {
+            button.classList.remove('copied');
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      });
+
+      pre.appendChild(button);
+    });
+  }
+
+  // Run on page load
+  addCopyButtons();
+
+  // Re-run after navigation (for SPA-like behavior)
+  document.addEventListener('astro:after-swap', addCopyButtons);
+</script>
+
+<style is:global>
+  .copy-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    background: white;
+    border: 1px solid #FFE4D1;
+    border-radius: 6px;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+  }
+
+  .copy-button:hover {
+    background: #FFF5ED;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: 0 2px 6px rgba(240, 93, 35, 0.15);
+  }
+
+  .copy-button .check-icon {
+    display: none;
+  }
+
+  .copy-button.copied {
+    background: #F05D23;
+    border-color: #F05D23;
+    color: white;
+  }
+
+  .copy-button.copied .copy-icon,
+  .copy-button.copied .copy-text {
+    display: none;
+  }
+
+  .copy-button.copied .check-icon {
+    display: block;
+  }
+
+  .copy-button.copied::after {
+    content: 'Copied!';
+  }
+</style>

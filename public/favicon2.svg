@@ -1,0 +1,31 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Orange inner background -->
+  <rect width="256" height="256" fill="#D86F33"/>
+
+  <!-- CRT Monitor -->
+  <!-- Main group uses thinner strokes -->
+  <g stroke="#5B3320" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Side blocks -->
+    <rect x="62" y="112" width="22" height="60" rx="6" fill="#B6AAA0"/>
+    <rect x="172" y="112" width="22" height="60" rx="6" fill="#B6AAA0"/>
+
+    <!-- Monitor body -->
+    <rect x="62" y="90" width="132" height="110" rx="24" fill="#FCEFD9"/>
+
+    <!-- Screen -->
+    <rect x="82" y="110" width="92" height="72" rx="18" fill="#F9E6CF"/>
+
+    <!-- Base -->
+    <rect x="96" y="190" width="64" height="20" rx="6" fill="#FCEFD9"/>
+  </g>
+
+  <!-- Cute small face -->
+  <g fill="#5B3320">
+    <circle cx="112" cy="138" r="4"/>
+    <circle cx="144" cy="138" r="4"/>
+  </g>
+
+  <!-- Smile -->
+  <path d="M112 150 C118 158, 138 158, 144 150"
+        fill="none" stroke="#5B3320" stroke-width="4" stroke-linecap="round"/>
+</svg>

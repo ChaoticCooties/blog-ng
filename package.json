@@ -1,0 +1,15 @@
+{
+  "name": "blog-ng",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.12",
+    "astro": "^5.0.0"
+  }
+}

@@ -1,0 +1,104 @@
+---
+interface Props {
+  title: string;
+  date: string;
+  description: string;
+  slug: string;
+  category?: string;
+}
+
+const { title, date, description, slug, category = 'Research' } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric'
+});
+
+// Category color mapping - complementary to orange theme
+const categoryColors: Record<string, string> = {
+  'AI': '#F05D23',                    // Primary orange
+  'Cybersecurity': '#70A37F',         // Sage green
+  'AI / Cyber': '#D4A015'             // Warm golden yellow
+};
+
+const categoryColor = categoryColors[category] || '#6B6B6B';
+---
+
+<article class="post-card">
+  <div class="post-header">
+    <span class="category" style={`background-color: ${categoryColor}; color: white;`}>
+      {category}
+    </span>
+    <time class="date">{formattedDate}</time>
+  </div>
+  <a href={`/blog/${slug}`} class="post-link">
+    <h2 class="post-title">{title}</h2>
+    <p class="post-description">{description}</p>
+  </a>
+</article>
+
+<style>
+  .post-card {
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: var(--transition);
+  }
+  
+  .post-card:hover {
+    transform: translateX(8px);
+  }
+  
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .category {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.875rem;
+    border-radius: 6px;
+  }
+  
+  .date {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+  
+  .post-link {
+    display: block;
+    color: inherit;
+  }
+  
+  .post-title {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
+    transition: var(--transition);
+  }
+  
+  .post-card:hover .post-title {
+    color: var(--color-primary);
+  }
+  
+  .post-description {
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .post-card {
+      padding: 1.5rem 0;
+    }
+    
+    .post-title {
+      font-size: 1.35rem;
+    }
+  }
+</style>

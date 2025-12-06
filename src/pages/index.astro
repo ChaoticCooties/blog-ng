@@ -1,0 +1,269 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+// Get all blog posts from content collections
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Sort posts by date (newest first)
+const posts = allPosts.sort((a, b) =>
+  b.data.date.valueOf() - a.data.date.valueOf()
+).map(post => ({
+  title: post.data.title,
+  date: post.data.date.toISOString().split('T')[0],
+  description: post.data.description,
+  slug: post.slug,
+  category: post.data.category,
+  tags: post.data.tags || []
+}));
+
+// Get unique categories from posts
+const uniqueCategories = [...new Set(posts.map(post => post.category))];
+const categories = ['All', ...uniqueCategories.sort()];
+---
+
+<BaseLayout 
+  title="AI Experiments | Research & Insights"
+  description="Insights into AI experiments and research projects"
+>
+  <div class="container">
+    <div class="hero">
+      <h1 class="hero-title">Research</h1>
+      <p class="hero-description">
+        A collection of technical projects and experiments, exploring how emerging technologies work in practice.
+      </p>
+    </div>
+    
+    <div class="filters">
+      <div class="filter-group">
+        {categories.map(cat => (
+          <button
+            class={`filter-btn ${cat === 'All' ? 'active' : ''}`}
+            data-category={cat}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="posts">
+      {posts.map(post => (
+        <div data-category={post.category}>
+          <PostCard {...post} />
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  
+  .hero {
+    margin-bottom: 4rem;
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hero-description {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    max-width: 600px;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .filter-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .filter-btn {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .filter-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text);
+  }
+  
+  .filter-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+  }
+  
+  .posts {
+    animation: fadeIn 0.8s ease-out 0.2s both;
+  }
+
+  .posts > div {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .posts > div.filtering-out {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+  }
+
+  .posts > div.hidden {
+    display: none;
+  }
+
+  .posts > div.filtering-in {
+    animation: filterIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes filterIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 2rem 1.5rem;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-description {
+      font-size: 1.1rem;
+    }
+
+    .filters {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  // Category filtering with ultra-smooth animations
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const posts = document.querySelectorAll('.posts > div');
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.getAttribute('data-category');
+
+      // Update active button
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      // Separate posts into two groups
+      const toHide: Element[] = [];
+      const toShow: Element[] = [];
+
+      posts.forEach((post) => {
+        const postCategory = post.getAttribute('data-category');
+        const shouldShow = category === 'All' || postCategory === category;
+        const isCurrentlyHidden = post.classList.contains('hidden');
+
+        if (!shouldShow && !isCurrentlyHidden) {
+          toHide.push(post);
+        } else if (shouldShow && isCurrentlyHidden) {
+          toShow.push(post);
+        } else if (shouldShow && !isCurrentlyHidden) {
+          // Already visible, clean state
+          post.classList.remove('filtering-out', 'filtering-in');
+        }
+      });
+
+      // First, fade out posts that need to hide
+      toHide.forEach((post) => {
+        post.classList.remove('filtering-in');
+        post.classList.add('filtering-out');
+      });
+
+      // After fade out completes, hide them and show new ones
+      setTimeout(() => {
+        toHide.forEach((post) => {
+          post.classList.add('hidden');
+          post.classList.remove('filtering-out');
+        });
+
+        // Show new posts with staggered animation
+        toShow.forEach((post, index) => {
+          post.classList.remove('hidden', 'filtering-out');
+
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              post.classList.add('filtering-in');
+
+              setTimeout(() => {
+                post.classList.remove('filtering-in');
+              }, 300);
+            });
+          }, index * 40); // 40ms stagger between each item
+        });
+      }, 250);
+    });
+  });
+</script>
