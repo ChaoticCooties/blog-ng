@@ -1,14 +1,15 @@
-# AI Experiments Blog
+# blog-ng
 
-A clean, minimalist blog built with Astro featuring a warm orange color scheme (#F05D23) and off-white background. Inspired by OpenAI/Anthropic research blogs.
+A clean, minimalist blog built with Astro featuring a warm orange color scheme and off-white background. Focused on AI and cybersecurity research content.
 
 ## Features
 
-- 🎨 Beautiful orange (#F05D23) and off-white (#FAF8F5) color scheme
+- 🎨 Beautiful color-coded categories (Orange for AI, Sage Green for Cybersecurity, Golden Yellow for AI/Cyber)
 - 📱 Fully responsive design
 - ⚡ Lightning-fast static site generation with Astro
-- 🎯 Clean, research-focused listing layout
-- 🌐 Easy deployment to Netlify, Vercel, or GitHub Pages
+- 📝 MDX support for rich content
+- 🎯 Clean, research-focused layout
+- 🚀 Automated GitHub Pages deployment
 
 ## Quick Start
 
@@ -36,46 +37,92 @@ npm run preview
 
 ```
 /
-├── public/             # Static assets (favicon, etc)
+├── .github/
+│   └── workflows/
+│       └── deploy.yml         # GitHub Actions deployment
+├── public/                    # Static assets (favicon, etc)
 ├── src/
-│   ├── components/     # Reusable components
+│   ├── components/            # Reusable components
 │   │   └── PostCard.astro
-│   ├── layouts/        # Page layouts
+│   ├── content/               # Content collections
+│   │   ├── blog/              # Blog posts (MDX)
+│   │   └── config.ts          # Content schema
+│   ├── layouts/               # Page layouts
 │   │   └── BaseLayout.astro
-│   ├── pages/          # Route pages
-│   │   ├── index.astro       # Homepage
-│   │   ├── about.astro       # About page
+│   ├── pages/                 # Route pages
+│   │   ├── index.astro        # Homepage
 │   │   └── blog/
-│   │       └── model-confessions.astro
+│   │       └── [...slug].astro  # Dynamic blog routes
 │   └── styles/
-│       └── global.css        # Global styles
-├── astro.config.mjs    # Astro configuration
+│       └── global.css         # Global styles
+├── astro.config.mjs           # Astro configuration
 └── package.json
 ```
 
 ## Adding Blog Posts
 
-Currently using static data. To add posts, simply create new `.astro` files in `src/pages/blog/`.
+Blog posts are managed using Astro Content Collections with MDX support.
 
-For a more scalable approach with Markdown files, consider using Astro Content Collections (see Astro docs).
+To add a new post, create an `.md` or `.mdx` file in `src/content/blog/`:
+
+```markdown
+---
+title: "Your Post Title"
+date: 2025-12-07
+description: "A brief description of your post"
+category: "AI"  # Options: AI, Cybersecurity, AI / Cyber
+tags: ["tag1", "tag2"]
+---
+
+Your content here...
+```
+
+### Category Colors
+- **AI**: Orange (#F05D23)
+- **Cybersecurity**: Sage Green (#70A37F)
+- **AI / Cyber**: Golden Yellow (#D4A015)
 
 ## Deployment
 
-### Netlify (Recommended)
-1. Push your code to GitHub
-2. Connect repository to Netlify
-3. Netlify auto-detects Astro
-4. Deploy!
+### GitHub Pages (Configured)
 
-### GitHub Pages
-1. Uncomment and set `base` in `astro.config.mjs`
-2. Push to GitHub
-3. Enable GitHub Pages in repository settings
+The site is configured for automatic deployment to GitHub Pages via GitHub Actions.
 
-### Cloudflare Pages
-1. Connect your GitHub repository
-2. Auto-deploys on push
-3. Fast global CDN
+**Setup:**
+
+1. Push to GitHub:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin https://github.com/chaoticooties/chaoticooties.github.io.git
+   git branch -M main
+   git push -u origin main
+   ```
+
+2. Enable GitHub Pages:
+   - Go to repository **Settings** → **Pages**
+   - Under **Source**, select **GitHub Actions**
+
+3. Your site will be live at:
+   - GitHub URL: `https://chaoticooties.github.io/`
+   - Custom domain: `https://cooties.io/` (if configured)
+
+**Automatic Deployments:**
+- Every push to `main` branch triggers automatic build and deployment
+- Check deployment status in the **Actions** tab
+
+### Alternative Deployment Options
+
+**Netlify:**
+- Change `site` in `astro.config.mjs` to your Netlify URL
+- Connect repository to Netlify
+- Auto-deploys on push
+
+**Vercel/Cloudflare Pages:**
+- Connect GitHub repository
+- Auto-detects Astro configuration
+- Fast global CDN
 
 ## Customization
 
@@ -98,9 +145,11 @@ Change the Google Fonts import to use different fonts.
 
 ## Tech Stack
 
-- **Framework:** Astro 4.0
+- **Framework:** Astro 5.0
+- **Content:** MDX for blog posts with Content Collections
 - **Fonts:** Google Fonts (Crimson Pro, DM Sans)
-- **Deployment:** Static HTML/CSS/JS (works anywhere)
+- **Deployment:** GitHub Pages with GitHub Actions
+- **Hosting:** Static HTML/CSS/JS (works anywhere)
 
 ## License
 

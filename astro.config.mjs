@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 
 export default defineConfig({
   site: 'https://chaoticooties.github.io',
-  base: '/blog-ng',
+  // base: '/blog-ng',
   integrations: [mdx()],
   markdown: {
     shikiConfig: {
