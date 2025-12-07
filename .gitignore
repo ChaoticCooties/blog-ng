@@ -18,5 +18,14 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-# vscode setting folder
+# IDE settings
 .vscode/
+.idea/
+
+# Claude Code
+.claude/
+
+# Temporary files
+*.tmp
+*.log
+.cache/

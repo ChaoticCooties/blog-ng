@@ -2,8 +2,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-  site: 'https://chaoticooties.github.io',
-  // base: '/blog-ng',
+  site: 'https://cooties.io',
   integrations: [mdx()],
   markdown: {
     shikiConfig: {

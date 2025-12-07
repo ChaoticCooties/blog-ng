@@ -9,12 +9,12 @@ interface Props {
 }
 
 const {
-  title = 'Cooties@Blog | Cybersecurity & AI Research',
-  description = 'A platform where I delve into Cybersecurity/ML insights, retrospectives and articles spanning my industry & academic experience.',
+  title = 'Cooties@Blog | Cybersecurity & AI Research Insights',
+  description = 'Exploring the intersection of Cybersecurity and Machine Learning through in-depth technical articles, research insights, and practical experiments.',
   image = '/og-image.png'  // Use PNG for better LinkedIn/social media support
 } = Astro.props;
 
-const siteUrl = Astro.site || 'https://chaoticcooties.github.io';
+const siteUrl = Astro.site || 'https://cooties.io';
 const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
 ---
 
