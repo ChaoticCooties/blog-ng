@@ -1,0 +1,162 @@
+<div class="languageambiguity-diagram">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480">
+    <!-- Arrow defs -->
+    <defs>
+        <marker id="arrow-soft" markerWidth="10" markerHeight="10"
+                refX="9" refY="3" orient="auto">
+        <polygon points="0 0, 10 3, 0 6" fill="#C2BFB6"/>
+        </marker>
+    </defs>
+
+    <!-- Title -->
+    <text x="450" y="40" text-anchor="middle"
+            font-family="'DM Sans', sans-serif"
+            font-size="22" font-weight="600" fill="#1A1A1A">
+        Language Ambiguity
+    </text>
+    <text x="450" y="65" text-anchor="middle"
+            font-family="'DM Sans', sans-serif"
+            font-size="13" fill="#6B6B6B">
+        The same phrase can map to very different meanings depending on context.
+    </text>
+
+    <!-- Main panel -->
+    <rect x="60" y="90" width="780" height="330" rx="12"
+            fill="none" stroke="#E8E5DF" stroke-width="2"/>
+
+    <!-- Column headers -->
+    <text x="120" y="120"
+            font-family="'DM Sans', sans-serif"
+            font-size="13" font-weight="600" fill="#6B6B6B">
+        Same Phrase
+    </text>
+    <text x="510" y="120"
+            font-family="'DM Sans', sans-serif"
+            font-size="13" font-weight="600" fill="#6B6B6B">
+        Possible Interpretations
+    </text>
+
+    <!-- ================= Row 1: "Open the file" ================= -->
+
+    <!-- Phrase box -->
+    <rect x="80" y="140" width="210" height="42" rx="10"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="2"/>
+    <text x="185" y="167" text-anchor="middle"
+            font-family="'DM Sans', sans-serif"
+            font-size="14" fill="#1A1A1A">
+        “Open the file”
+    </text>
+
+    <!-- Arrows -->
+    <line x1="290" y1="161" x2="350" y2="145"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+    <line x1="290" y1="161" x2="350" y2="161"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+    <line x1="290" y1="161" x2="350" y2="177"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+
+    <!-- Meaning pills -->
+    <rect x="370" y="135" width="180" height="26" rx="13"
+            fill="#FFF9F0" stroke="#F05D23" stroke-width="1.5"/>
+    <text x="460" y="152" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#F05D23">
+        Literal: open a document
+    </text>
+
+    <rect x="560" y="135" width="200" height="26" rx="13"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="1.5"/>
+    <text x="660" y="152" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#6B6B6B">
+        Reveal internal/system state
+    </text>
+
+    <rect x="370" y="165" width="200" height="26" rx="13"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="1.5"/>
+    <text x="470" y="182" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#6B6B6B">
+        Summarize/explain a file
+    </text>
+
+    <!-- ================= Row 2: "Run the program" ================= -->
+
+    <!-- Phrase box -->
+    <rect x="80" y="215" width="210" height="42" rx="10"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="2"/>
+    <text x="185" y="242" text-anchor="middle"
+            font-family="'DM Sans', sans-serif"
+            font-size="14" fill="#1A1A1A">
+        “Run the program”
+    </text>
+
+    <!-- Arrows -->
+    <line x1="290" y1="236" x2="350" y2="220"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+    <line x1="290" y1="236" x2="350" y2="236"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+    <line x1="290" y1="236" x2="350" y2="252"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+
+    <!-- Meaning pills -->
+    <rect x="370" y="210" width="180" height="26" rx="13"
+            fill="#FFF9F0" stroke="#F05D23" stroke-width="1.5"/>
+    <text x="460" y="227" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#F05D23">
+        Explain how the code runs
+    </text>
+
+    <rect x="560" y="210" width="200" height="26" rx="13"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="1.5"/>
+    <text x="660" y="227" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#6B6B6B">
+        Execute something (dangerous)
+    </text>
+
+    <rect x="370" y="240" width="200" height="26" rx="13"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="1.5"/>
+    <text x="470" y="257" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#6B6B6B">
+        Part of a fictional narrative
+    </text>
+
+    <!-- ================= Row 3: "Find the key" ================= -->
+
+    <!-- Phrase box -->
+    <rect x="80" y="290" width="210" height="42" rx="10"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="2"/>
+    <text x="185" y="317" text-anchor="middle"
+            font-family="'DM Sans', sans-serif"
+            font-size="14" fill="#1A1A1A">
+        “Find the key”
+    </text>
+
+    <!-- Arrows -->
+    <line x1="290" y1="311" x2="350" y2="295"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+    <line x1="290" y1="311" x2="350" y2="311"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+    <line x1="290" y1="311" x2="350" y2="327"
+            stroke="#C2BFB6" stroke-width="2" marker-end="url(#arrow-soft)"/>
+
+    <!-- Meaning pills -->
+    <rect x="370" y="285" width="180" height="26" rx="13"
+            fill="#FFF9F0" stroke="#F05D23" stroke-width="1.5"/>
+    <text x="460" y="302" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#F05D23">
+        Literal: locate a lost object
+    </text>
+
+    <rect x="560" y="285" width="200" height="26" rx="13"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="1.5"/>
+    <text x="660" y="302" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#6B6B6B">
+        Find a cryptographic key (attack!)
+    </text>
+
+    <rect x="370" y="315" width="210" height="26" rx="13"
+            fill="#FAF8F5" stroke="#E8E5DF" stroke-width="1.5"/>
+    <text x="475" y="332" text-anchor="middle"
+            font-family="'DM Sans', sans-serif" font-size="11" fill="#6B6B6B">
+        Interpret metaphorically (“key idea”)
+    </text>
+    </svg>
+</div>

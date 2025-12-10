@@ -1,0 +1,101 @@
+<div class="fuzzyboundary-diagram">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500">
+    <!-- Title -->
+    <text x="60" y="50" font-family="'DM Sans', sans-serif" font-size="24" font-weight="600" fill="#1A1A1A">
+        Deterministic vs Stochastic Decision Boundaries
+    </text>
+
+    <!-- LEFT PANEL: Deterministic -->
+    <g id="deterministic">
+        <rect x="60" y="90" width="500" height="320" fill="none" stroke="#E8E5DF" stroke-width="2" rx="8"/>
+        
+        <text x="310" y="120" font-family="'DM Sans', sans-serif" font-size="16"
+            font-weight="600" fill="#6B6B6B" text-anchor="middle">
+        Deterministic Boundary
+        </text>
+
+        <!-- Axes -->
+        <line x1="120" y1="330" x2="420" y2="330" stroke="#D0D0D0" stroke-width="2"/>
+        <line x1="140" y1="160" x2="140" y2="340" stroke="#D0D0D0" stroke-width="2"/>
+
+        <!-- Sharp boundary -->
+        <line x1="180" y1="180" x2="400" y2="320" stroke="#F05D23" stroke-width="3"/>
+
+        <!-- Points (safe region) -->
+        <circle cx="190" cy="290" r="7" fill="#FAF8F5" stroke="#4A4A4A" stroke-width="2"/>
+        <circle cx="230" cy="270" r="7" fill="#FAF8F5" stroke="#4A4A4A" stroke-width="2"/>
+        <circle cx="270" cy="250" r="7" fill="#FAF8F5" stroke="#4A4A4A" stroke-width="2"/>
+
+        <!-- Points (unsafe region) -->
+        <circle cx="260" cy="200" r="7" fill="#F05D23" opacity="0.15" stroke="#F05D23" stroke-width="2"/>
+        <circle cx="310" cy="210" r="7" fill="#F05D23" opacity="0.15" stroke="#F05D23" stroke-width="2"/>
+        <circle cx="360" cy="230" r="7" fill="#F05D23" opacity="0.15" stroke="#F05D23" stroke-width="2"/>
+
+        <text x="200" y="365" font-family="'DM Sans', sans-serif" font-size="13" fill="#6B6B6B">
+        Inputs fall clearly on one side
+        <tspan x="200" dy="18">of a hard boundary.</tspan>
+        </text>
+    </g>
+
+    <!-- RIGHT PANEL: Stochastic (same layout, fuzzy region instead of line) -->
+    <g id="stochastic">
+        <rect x="640" y="90" width="500" height="320" fill="none" stroke="#E8E5DF" stroke-width="2" rx="8"/>
+
+        <text x="890" y="120" font-family="'DM Sans', sans-serif" font-size="16"
+            font-weight="600" fill="#6B6B6B" text-anchor="middle">
+        Stochastic Boundary (LLMs)
+        </text>
+
+        <!-- Axes -->
+        <line x1="700" y1="330" x2="1000" y2="330" stroke="#D0D0D0" stroke-width="2"/>
+        <line x1="720" y1="160" x2="720" y2="340" stroke="#D0D0D0" stroke-width="2"/>
+
+        <!-- Fuzzy region (replaces crisp line) -->
+        <defs>
+        <linearGradient id="fuzzyBandV" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F05D23" stop-opacity="0.10"/>
+            <stop offset="50%" stop-color="#F05D23" stop-opacity="0.30"/>
+            <stop offset="100%" stop-color="#F05D23" stop-opacity="0.10"/>
+        </linearGradient>
+        </defs>
+
+        <!-- A band approximating fuzzy boundary -->
+        <path d="M 740 200 C 820 230 900 230 980 260 
+                L 980 300 C 900 270 820 260 740 230 Z"
+            fill="url(#fuzzyBandV)" stroke="#F05D23" stroke-width="2" stroke-dasharray="6 4"/>
+
+        <!-- Points scattered across regions -->
+        <!-- Safe-ish region -->
+        <circle cx="760" cy="300" r="7" fill="#FAF8F5" stroke="#4A4A4A" stroke-width="2"/>
+        <circle cx="800" cy="280" r="7" fill="#FAF8F5" stroke="#4A4A4A" stroke-width="2"/>
+        <circle cx="840" cy="260" r="7" fill="#FAF8F5" stroke="#4A4A4A" stroke-width="2"/>
+
+        <!-- Uncertain region (inside fuzzy band) -->
+        <circle cx="870" cy="245" r="7" fill="#F05D23" opacity="0.25" stroke="#F05D23" stroke-width="2"/>
+        <circle cx="915" cy="255" r="7" fill="#F05D23" opacity="0.25" stroke="#F05D23" stroke-width="2"/>
+
+        <!-- Unsafe-ish region -->
+        <circle cx="950" cy="290" r="7" fill="#F05D23" opacity="0.15" stroke="#F05D23" stroke-width="2"/>
+        <circle cx="920" cy="310" r="7" fill="#F05D23" opacity="0.15" stroke="#F05D23" stroke-width="2"/>
+
+        <text x="890" y="365" font-family="'DM Sans', sans-serif" font-size="13" fill="#6B6B6B" text-anchor="middle">
+        The same input can land anywhere inside
+        <tspan x="890" dy="18">a fuzzy band of possible outcomes.</tspan>
+        </text>
+    </g>
+
+    <!-- Legend -->
+    <g id="legend" transform="translate(60, 440)">
+        <text x="0" y="0" font-family="'DM Sans', sans-serif" font-size="14" font-weight="600" fill="#6B6B6B">
+        Key Idea:
+        </text>
+        <text x="0" y="24" font-family="'DM Sans', sans-serif" font-size="13" fill="#6B6B6B">
+        Deterministic systems have a <tspan font-weight="600" fill="#1A1A1A">clear boundary</tspan>,
+        while LLMs operate with a
+        </text>
+        <text x="0" y="42" font-family="'DM Sans', sans-serif" font-size="13" fill="#6B6B6B">
+        <tspan font-weight="600" fill="#F05D23">stochastic band</tspan> where outcomes overlap.
+        </text>
+    </g>
+    </svg>
+</div>
