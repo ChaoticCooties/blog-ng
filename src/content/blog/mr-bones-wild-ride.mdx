@@ -1,0 +1,61 @@
+---
+title: 'Mr Bones, Get Me Off This Wild Ride'
+description: 'Agentic AI, labor economics, and the end of the apprenticeship model.'
+date: 2026-03-25
+category: 'AI / Cyber'
+tags: ['opinion', 'cybersecurity', 'economics', 'ai-safety']
+draft: false
+---
+
+We're approaching an inflection point that most of the industry is either sleepwalking toward or actively refusing to adapt to. The tech labor market has been overleveraged since the COVID hiring spree, when companies scaled headcount on the assumption that output scales linearly with people. Now, with agentic AI multiplying individual output by an order of magnitude, the gap between how many people the industry employs and how many it actually needs is widening fast.
+
+## The Capability Curve
+
+The characterization of LLMs as "fancy autocomplete" no longer holds. Benchmarks that were supposed to hold for years are [falling in months](https://arcprize.org/blog/oai-o3-pub-breakthrough). Anthropic's own [economic research](https://www.anthropic.com/research/the-anthropic-model-spec) shows models increasingly operating at the level of mid-career professionals across a range of tasks.
+
+A common pushback is that agentic output doesn't compare to a skilled human's which may be true in isolation, but that framing misses the point. The comparison that matters isn't one model versus one human, but one human overseeing an agentic system producing 10x the output versus ten humans working independently. The quality doesn't need to match on every individual task, it needs to be good enough across the aggregate with a single experienced operator catching the gaps. That's a fundamentally different staffing equation and most organizations will take it.
+
+## Penetration Testing
+
+As a penetration tester, the economics of this displacement are particularly visible. A typical engagement gives a tester a fixed timebox to leverage experience and intuition to find and exploit vulnerabilities. Clients then pay for that judgment under constraints.
+
+From my knowledge in the field, any cybersecurity firm with serious engineering capability is building or integrating agentic automated testing in some capacity. The reason is simple: Baseline coverage, the work that constitutes the bulk of most engagements (common misconfigurations, known CVEs, OWASP Top 10, compliance surface), is well-suited to autonomous execution.
+
+There's a deeper reason why thisbworks so well. Most professional knowledge work, pentesting included, is ultimately reducible to structured decision-making. An experienced tester doesn't operate on intuition in the romantic sense, but rather they're executing a learned methodology: *If this port is open, check for this service. If this service is running, try these exploits. If this input is reflected, test for injection.* What we call "expertise" is to a significant degree the internalization of branching logic accumulated over years of practice, and this is precisely the mode of reasoning that LLMs excel at. The same if-else decomposition that a human tester performs implicitly, an agentic system performs explicitly and at scale.
+
+In economic terms, penetration testing is a labor-intensive service sold on billable hours. The supply curve for testing labor has historically been constrained by the time it takes to train a competent tester (years) and the fixed throughput of a single human per engagement. Agentic tooling shifts that supply curve outward dramatically, dropping the marginal cost of producing an additional unit of testing coverage close to zero. In a market where demand is relatively inelastic (organizations have compliance requirements and fixed security budgets, not unlimited appetite for more testing), a supply shock like this doesn't create proportional new demand. It creates downward pressure on price, and by extension on the labor that was previously required to deliver at that price point.
+
+This is textbook [Jevons paradox](https://en.wikipedia.org/wiki/Jevons_paradox) territory. Increased efficiency *could* expand total demand, but only if the market is elastic enough to absorb it. For mature organizations with existing programs, the more likely outcome is the same coverage with fewer people at lower cost. The [2024 ISC2 Cybersecurity Workforce Study](https://www.isc2.org/Insights/2024/11/ISC2-2024-Cybersecurity-Workforce-Study) reported a global shortage of 4.8 million cybersecurity professionals, but that number assumed human-scale productivity. When a single analyst with agentic tooling matches the output of three, that shortage inverts into oversupply.
+
+## Proletarianisation
+
+The conventional narrative about AI displacement focuses on repetitive, low-skill labor. What's actually eroding is the entire bottom half of the professional ladder, from entry-level through mid-career. The junior analyst, the mid-level pentester running structured assessments, the staff engineer shipping feature work.
+
+Juniors have always been investments. Organizations hire them below their cost, train them on the job, and recoup the difference as they grow into senior roles. In labor economics this is [firm-specific human capital](https://en.wikipedia.org/wiki/Human_capital#Firm-specific_human_capital) accumulation, where the employer bears the training cost in exchange for future productivity gains. There's no reason to make that investment anymore when an agentic system produces equivalent output on day one at a fraction of the cost with no onboarding. The same applies to mid-career structured assessment work. Running playbooks, checking configurations, writing findings reports. This is precisely what agentic AI replicates most completely.
+
+If there's no economic incentive to hire newcomers, the entry points into the profession disappear entirely. What remains is a top-heavy industry. A small number of experienced specialists directing AI systems and handling edge cases, with no pipeline feeding the next generation below them. The seniors who remain are valuable precisely *because* of the decades of experience they accumulated through a career ladder that no longer exists for anyone coming after them. The result is a [buyer's market](https://en.wikipedia.org/wiki/Buyer%27s_market) for technical labor, with a shrinking number of roles and a growing pool of displaced workers competing on willingness to accept less rather than on skill differentiation.
+
+This is already observable. Junior hiring freezes are spreading. Consulting firms are restructuring engagement teams to be smaller and more senior. Nobody's talking about where the next generation of senior practitioners is supposed to come from.
+
+There's a broader way to read this though. If knowledge work is being compressed, the labor that retains value is work that requires physical presence, embodied judgment, and human-to-human trust. Nursing, social work, trades, eldercare, teaching. These have been systematically undervalued for decades relative to the knowledge economy, despite being harder to automate and arguably more essential. The displacement of knowledge workers may represent a rebalancing. Not just in tech staffing, but in how society allocates economic value between the people who manipulate information and the people who take care of other people. The latter group has been underpaid for as long as the former has been overpaid. If AI collapses the premium on information work, the relative standing of physical and care-oriented labor rises. Not because those workers are paid more, but because the gap narrows from above. Still, the societal perception of which work is valuable, and the allocation of status and resources that follows from it, may shift in ways that are long overdue.
+
+## Upskilling
+
+The reflexive advice many would give is to "upskill in AI." by learning prompt engineering and integrating LLMs into workflows. However this is arguably insufficient. Any technically literate person can learn to operate these tools in minutes. "I know how to use agentic tooling" isn't a differentiator when everyone knows how to use agentic tooling. It's table stakes, the same way knowing how to use Google was table stakes by 2005.
+
+The underlying problem is that AI proficiency doesn't function like previous technical skills. Learning to code, learning to pentest, learning to architect systems. These took years of deliberate practice and created genuine scarcity. Prompting an agentic system requires domain awareness, not domain mastery. The skill floor has risen but the skill ceiling that justified premium compensation has been compressed from above. The result is a narrower band of differentiation with more people competing inside it.
+
+In creative fields, authenticity has emerged as a genuine source of value. People pay premiums for human-made art and authentic creative expression. This works because the consumer assigns meaning to the process, not just the output. But in an algorithmic domain like security testing or software engineering, the process is irrelevant. Nobody cares whether a human or a machine found an SQL injection. There's no "artisanal pentest" premium, and there never will be, because the value of security work is measured in outcomes, not provenance.
+
+## What Remains
+
+The domains where human advantage persists share a common trait. They resist the kind of methodological decomposition described earlier.
+
+- **Physical security and red teaming.** Agentic systems can't pick locks, tailgate through doors, or social-engineer a receptionist face-to-face. This advantage is durable precisely because it's grounded in physical presence, not information processing.
+- **Novel vulnerability research.** Original security research still demands creative, lateral thinking that current AI struggles with. But the [volume of AI-assisted vulnerability discovery](https://security.googleblog.com/2024/11/leveling-up-fuzzing-finding-more.html) is accelerating and the bar for what counts as "novel" keeps rising. More output per researcher means fewer researchers needed for the same coverage.
+- **Empirical AI research.** As agentic systems take over execution, the question of how to evaluate, measure, and understand their behavior becomes increasingly important. This is less about building the systems and more about studying them. It's a field that barely exists in a formalized sense at the moment but it is likely the next significant area of growth. The workforce required is small relative to the displacement, but the demand for rigorous empirical work on AI behavior will only increase as these systems are trusted with more consequential decisions.
+- **Transitioning to fieldwork-dependent domains.** Disciplines where physical presence and environmental interaction are prerequisites, not conveniences. Ecological research, conservation biology, infrastructure inspection, geological survey work. These fields have their own automation pressures, but the core loop of being somewhere, observing something, and making situated judgments resists remote execution in a way that information work doesn't. It's still research, and it still suffers from the same supply-side dynamics once the analysis phase is automated, but the data collection itself remains embodied. Increasingly, this is the direction I'm personally considering.
+
+None of these represent a stable equilibrium. They're positions of temporary advantage in a landscape where the boundary of what can be automated is moving faster than most professionals can reposition. The question isn't whether these niches will hold indefinitely (_hint: they won't_). The question is how long they hold, and whether that window is long enough to matter for career planning.
+
+The ride isn't stopping. Mr Bones doesn't let anyone off.
