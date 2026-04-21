@@ -1,0 +1,88 @@
+---
+title: 'Project Umbra - Retrospective on Supply Chain Tooling Research'
+description: 'Building an agentic vulnerability scanner, finding a real backdoor, and why this kind of work should be standard practice.'
+date: 2026-04-21
+category: 'AI / Cyber'
+tags: ['supply-chain', 'llm', 'vulnerability-research', 'pentesting']
+draft: true
+---
+
+import ArchitectureBenchmark from '../../components/ArchitectureBenchmark.astro';
+
+<img src="/project-umbra-logo.png" alt="Project Umbra" style="width: 100%; margin: 0 auto 2rem; display: block;" />
+
+Project Umbra is a personal experiment in using agentic LLM systems for software supply chain vulnerability detection. The motivation is straightforward: the standard defensive posture for supply chain risk today is version pinning, lock files, and SCA tools that match dependency versions against known CVE databases. This catches packages with *disclosed* vulnerabilities. It does nothing about the package that was acquired last month by a new maintainer who inserted a backdoor into a routine update. That package has no CVE. Its version number is clean. It passes every check.
+
+Static analysis tools like Semgrep are effective at matching known vulnerability patterns, but they cannot reason about whether code is doing what it claims to be doing. LLMs can perform this kind of contextual reasoning, which suggests they might be useful for identifying the class of supply chain compromise where malicious code is deliberately disguised as legitimate functionality. The idea was to build something closer to attack surface monitoring than traditional SAST: continuous, depth-first scanning across dependency trees, treating every package as potentially compromised rather than trusting by default.
+
+Although LLM-powered vulnerability scanners exist, there appears to be a gap in how they operate in the supply chain space, where adversaries now thrive given the escalation in supply chain attacks. The architecture is designed to be ecosystem-agnostic. The scanning pipeline, context extraction, and agentic analysis layer are not WordPress-specific. The goal is to run this against npm, PyPI, Maven, and other package-heavy ecosystems where enterprises inherit hundreds of transitive dependencies, any one of which could be compromised. WordPress was chosen as the proving ground because it offered the highest density of real vulnerabilities to benchmark against, but the underlying system is built to generalize.
+
+Over the course of testing, the scanner independently identified a real, actively exploited backdoor. This post describes the architecture we converged on, what didn't work, what the operational costs looked like, and what we think needs to happen next.
+
+## Choice of Ecosystem
+
+We initially chose WordPress for benchmarking because the plugin directory is massive, minimally curated, and has a well-established CVE pipeline through Wordfence. This provides grounding through confirmed vulnerabilities with known severity, disclosure dates, and affected versions. The ecosystem's density of real issues made it possible to evaluate the scanner against actual findings rather than synthetic test cases, as well as undiscovered ones, which is a net positive to the community.
+
+The scanner's ingestion pipeline works by querying the WordPress.org plugin API, which supports browsing by recency, popularity, or new additions. In randomized mode, the client picks a random browse category, selects a random starting page (capped at 50 to focus on actively maintained plugins), and shuffles results within each page. Plugins are then filtered by configurable criteria: minimum install count, last update date, tag inclusion/exclusion. Those that pass are downloaded concurrently (up to 10 at a time), extracted, and fed into the scanning pipeline.
+
+Once a plugin is downloaded, the scanner runs two parallel analysis flows depending on the vulnerability class. For sink-based vulnerabilities like SQL injection or XSS, Semgrep runs first with intentionally over-inclusive rules. Semgrep's role here is scope reduction, not detection. It identifies suspicious code regions, and then a context extractor pulls the containing function, hook registrations, callers, and class context. That extracted context is what gets sent to a specialized LLM agent for analysis.
+
+For vulnerability classes that involve the absence of security checks rather than the presence of dangerous patterns, such as authentication bypass or CSRF, a different flow is needed. Semgrep is poor at detecting missing code. Instead, a tree-sitter-based extractor parses every PHP file in the plugin, discovers all externally reachable endpoints, resolves each callback to its actual function body, and builds a context object. The LLM agent then evaluates whether the endpoint has appropriate capability checks for the operations it performs.
+
+Both flows converge on the same interface: a context object containing the relevant code and its surrounding structure, passed to a vulnerability-specific LLM agent. Findings are stored in a database with fingerprinting for deduplication across scans, and a triage UI presents them to human reviewers for confirmation before any disclosure.
+
+The plugin ingestion and selection layer has been open sourced as [wp-fetcher](https://github.com/chaoticcooties/wp-fetcher). The downloader, API client, filtering logic, and randomized crawling are useful independently of the LLM scanning pipeline, and other researchers working on WordPress security tooling can build on them.
+
+## The Backdoor
+
+After a few days of tuning, the scanner flagged [Accordion and Accordion Slider v1.4.6](https://www.wordfence.com/threat-intel/vulnerabilities/wordpress-plugins/accordion-and-accordion-slider/accordion-and-accordion-slider-146-injected-backdoor) as containing an injected backdoor.
+
+This turned out to be part of a broader, commercially-executed campaign. An entity had been systematically purchasing WordPress plugins through legitimate marketplace transactions, acquiring the plugin along with its existing user base, update channel, and reputation history. Across roughly 30 plugins, backdoors were inserted into routine version updates. The mechanism was effective precisely because it exploited trust at the distribution layer rather than at the code layer: download counts, ratings, and update history all remained intact. The attacker *was* the maintainer. There is a detailed writeup of the campaign [here](https://anchor.host/someone-bought-30-wordpress-plugins-and-planted-a-backdoor-in-all-of-them/).
+
+We submitted a CVE. However, the backdoor was exploited in the wild before a proper patch was deployed. In retrospect, this was partially a disclosure process failure on our end. Given the severity of an actively injected backdoor in a distributed plugin, the correct response was immediate escalation to WordPress and Wordfence channels rather than following the standard CVE submission timeline. The standard process assumes the vulnerability is a bug, not an active compromise. An active compromise demands incident response timelines, not disclosure timelines. We did not act on that distinction quickly enough.
+
+Nonetheless, the detection was meaningful as a validation signal. The scanner had no prior knowledge of this specific campaign. It identified the backdoor through contextual reasoning about code behavior, not through pattern matching against known malicious signatures.
+
+## Architecture
+
+We iterated through three approaches, each based on a different assumption about how much context an LLM needs to make useful security judgments.
+
+The first approach fed raw Semgrep output (matched rules, file paths, code snippets) directly to an LLM for triage. The model had no surrounding context for flagged code, couldn't trace whether suspicious calls were reachable from user-facing endpoints, and couldn't distinguish between anomalous patterns and legitimate features. Benchmark results were poor.
+
+The second approach gave each agent the entire codebase. Per-finding accuracy improved, but each scan cost approximately $5 in API calls, which is untenable for dependency-tree-scale scanning. More importantly, benchmark results were worse than the cost would suggest. We attribute this to the model distributing attention across irrelevant code. When a suspicious pattern lives in 200 lines of a single file, the surrounding 50,000 lines are noise that degrades reasoning quality.
+
+The third approach, and the one we settled on, was agentic context retrieval. Subagents receive a finding with minimal surrounding context and retrieve additional information on demand: call graphs, related files, configuration, data flow. The agent decides what context is relevant rather than receiving everything upfront. This produced the best benchmark results of the three approaches, including outperforming the full-codebase approach, at substantially lower cost.
+
+<ArchitectureBenchmark />
+
+We note a limitation in interpreting these results. Our benchmark skews toward detecting overtly malicious patterns (backdoors, obfuscated payloads) rather than subtle authorization flaws or novel vulnerability classes. The agentic approach may be particularly well-suited to the former. Whether the performance advantage holds for more complex, contextual vulnerabilities remains untested.
+
+## Operational Observations
+
+We did not initially set timeouts on agent reasoning loops. One agent entered a recursive reasoning cycle and consumed $100 in API calls before we noticed. Budget caps and timeout constraints are necessary from the start for any system with autonomous API call authority. In hindsight this could have been substantially worse.
+
+The false positive rate was high. Many findings were technically defensible in isolation (the flagged code was genuinely suspicious out of context) but benign when examined with broader codebase understanding. Triage was handled primarily by Olivier and Damien, and was time-consuming. LLM-generated false positives present a specific challenge relative to traditional SAST output. A Semgrep hit provides a rule ID and a line number. An LLM provides a paragraph-length explanation with plausible attack scenarios. The reasoning reads as legitimate even when the conclusion is wrong, which makes false positives harder to dismiss quickly and increases triage cost per finding.
+
+We also did not implement sufficient prompt caching, which meant shared context (system prompts, codebase structure) was reprocessed redundantly across agents scanning the same codebase. This is a meaningful cost multiplier for a system processing hundreds of files with overlapping context windows.
+
+## Implications for Pentesting Methodology
+
+A standard penetration test assesses the target application. It does not typically audit the dependency tree underneath it, which may contain hundreds of packages maintained by different individuals, each a potential acquisition target. The WordPress campaign is a concrete example of why this matters: the existing trust model, based on marketplace reputation signals, did not fail in an edge case. It failed in the scenario it was designed for.
+
+The conventional mitigations (version pinning, lock files, SCA databases) operate on a fundamentally reactive model. A vulnerability must be discovered, disclosed, and catalogued before those tools can detect it. Supply chain attacks that operate through maintainer acquisition, like the WordPress campaign, produce no signal in that pipeline until after exploitation. What is needed is something closer to continuous attack surface monitoring: proactive scanning that treats the dependency tree as untrusted code and reasons about it accordingly, rather than checking version numbers against a database of known-bad entries.
+
+Agentic scanning is, as far as we can tell, the first approach that can operate at the scale this problem requires. Not perfectly, and not cheaply yet, but at a cost-performance point that is approaching viability for firms running high-end engagements. We think dependency-tree analysis using this kind of tooling should be moving from experimental to expected in advanced penetration testing methodology. The attack surface has been demonstrated. The tooling is becoming practical. Incorporating it into standard practice before the next major supply chain compromise seems preferable to incorporating it after.
+
+## Next Steps
+
+Existing benchmarks for code security tools tend to use synthetic test cases. We want to build a benchmark from real-world packages with confirmed vulnerabilities across severity levels, vulnerability classes, and obfuscation techniques, and open source it. This is arguably AI safety adjacent work: if LLMs are going to make security judgments about the software supply chain, there should be a rigorous way to measure how well they do it.
+
+On false positives, we experimented with LLM-as-judge for automated triage, where a separate model classifies findings as true or false positives. This helped but did not address the root issue. We have some preliminary ideas about combining mechanistic interpretability with the triage layer: observing which internal features activate during detection to distinguish high-confidence findings from superficial pattern matches. The interpretability tooling for code-reasoning tasks is still early, and this remains speculative.
+
+The most straightforward improvement available is properly caching shared context across agents scanning the same codebase.
+
+A longer-term direction is extending the approach beyond source code ecosystems. The same supply chain trust problem exists in binary distribution channels: firmware images, compiled SDKs, pre-built shared libraries. The analysis pipeline would need to operate on decompiled or disassembled output rather than source, which introduces different context extraction challenges, but the agentic reasoning layer is structurally the same. Whether current LLMs can reason usefully about decompiled code at the level required for vulnerability detection is an open question that we think is worth investigating.
+
+The system was built on Claude (Opus 4.5/4.6 era). The architecture is model-agnostic in principle, but prompts were tuned for Claude's reasoning characteristics. Benchmarking across model families and optimizing for the cost-performance frontier is an obvious next step.
+
+This project was built with Olivier Gagne and Damien Wong, who contributed substantially to the triage work. We're interested in collaborating on the benchmark and evaluation side of this work, and in finding support to scale it further. If you're working in this space or interested in funding supply chain security research, we'd like to hear from you.
