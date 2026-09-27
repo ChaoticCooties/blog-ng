@@ -9,22 +9,22 @@ const postBySlug = new Map(published.map((post) => [post.slug, post]));
 
 const umbra = postBySlug.get('project-umbra');
 
-// Focus areas mirror the post categories, so About and the index filters agree.
+// Focus areas list hand-picked posts; each links to the matching index filter.
 const focusAreas = [
   {
     title: 'AI safety',
     summary: 'How language models behave under adversarial pressure, and where AI safety and AI security meet.',
+    slugs: ['mr-bones-wild-ride'],
   },
   {
     title: 'Cybersecurity',
     summary: 'Offensive security work, from supply-chain vulnerability research to how AI is changing the field.',
+    slugs: ['pentesting-llm-applications-part2', 'project-umbra'],
   },
 ].map((area) => ({
   ...area,
   href: `/?topic=${encodeURIComponent(area.title)}`,
-  posts: published
-    .filter((post) => post.data.category === area.title)
-    .sort((x, y) => y.data.date.valueOf() - x.data.date.valueOf()),
+  posts: area.slugs.map((slug) => postBySlug.get(slug)).filter((post) => post !== undefined),
 }));
 ---
 
