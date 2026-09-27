@@ -1,21 +1,38 @@
 ---
+/*
+  Design direction contract (Impeccable). Source-only; not shipped.
+  See DESIGN.md for the recorded system.
+  THESIS: The research-lab journal (Transformer Circuits, OpenAI interpretability, Goodfire structure) set in a naturalist field survey; refuses stock topo wallpaper and cream-and-serif nature cliches.
+  OWN-WORLD: Lichen off-white #F1F4EC with fine paper grain, moss ink #1C2B21, fern accent #36704D, forest band #1D3526; generated topographic contour fields (index contours heavier) in heroes and bands only; Literata titles and italic map-annotation labels, Geist text; original robot logo untouched, header only.
+  STORY: A reader lands on a surveyed field of work, sees the strongest finding, opens a post, and reads it on a clean page with a contents rail and wide figures.
+  FIRST VIEWPORT: Header with robot logo; hero band on a contour field with the Literata title and lede left-aligned; post list begins within the first screen.
+  FORM: Field Survey, position 4 of 7; seed e068c7cc.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+*/
 import '../styles/global.css';
 import CodeCopyButton from '../components/CodeCopyButton.astro';
+import Logo from '../components/Logo.astro';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  math?: boolean;
 }
 
 const {
-  title = 'Cooties@Blog | Cybersecurity & AI Research Insights',
-  description = 'Exploring the intersection of Cybersecurity and Machine Learning through in-depth technical articles, research insights, and practical experiments.',
-  image = '/og-image.png'  // Use PNG for better LinkedIn/social media support
+  title = 'Cooties@Blog | AI and security research',
+  description = 'Technical write-ups on AI security, LLM pentesting, and supply-chain vulnerability research.',
+  image = '/og-image.png',  // Use PNG for better LinkedIn/social media support
+  math = false,
 } = Astro.props;
 
 const siteUrl = Astro.site || 'https://cooties.io';
+const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
 const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
+const path = Astro.url.pathname;
+const isResearch = path === '/' || path.startsWith('/blog');
+const isAbout = path.startsWith('/about');
 ---
 
 <!DOCTYPE html>
@@ -24,12 +41,17 @@ const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content={description}>
+  <meta name="theme-color" content="#F1F4EC">
   <title>{title}</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate" type="application/rss+xml" title="Cooties@Blog" href="/rss.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400..600;1,7..72,400..500&display=swap">
 
   <!-- Open Graph / Facebook / LinkedIn -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content={siteUrl}>
+  <meta property="og:url" content={pageUrl}>
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
   <meta property="og:image" content={imageUrl}>
@@ -39,207 +61,157 @@ const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content={siteUrl}>
+  <meta property="twitter:url" content={pageUrl}>
   <meta property="twitter:title" content={title}>
   <meta property="twitter:description" content={description}>
   <meta property="twitter:image" content={imageUrl}>
 
-  <!-- KaTeX CSS for math rendering -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  {math && (
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  )}
 </head>
 <body>
-  <header class="header">
-    <nav class="nav">
-      <a href="/" class="logo">
-        <svg class="logo-icon" width="50" height="50" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(8, 12) scale(1)">
-            <g stroke="#5B3320" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="62" y="112" width="22" height="60" rx="6" fill="#B6AAA0"/>
-              <rect x="172" y="112" width="22" height="60" rx="6" fill="#B6AAA0"/>
-              <rect x="62" y="90" width="132" height="110" rx="24" fill="#FCEFD9"/>
-              <rect x="82" y="110" width="92" height="72" rx="18" fill="#F9E6CF"/>
-              <rect x="96" y="190" width="64" height="20" rx="6" fill="#FCEFD9"/>
-            </g>
-            <g fill="#5B3320">
-              <circle cx="112" cy="138" r="4"/>
-              <circle cx="144" cy="138" r="4"/>
-            </g>
-            <path
-              d="M112 150 C118 158, 138 158, 144 150"
-              fill="none"
-              stroke="#5B3320"
-              stroke-width="4"
-              stroke-linecap="round"
-            />
-          </g>
-        </svg>
-        <span class="logo-text">Cooties</span>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="container nav" aria-label="Primary">
+      <a href="/" class="brand" aria-label="Cooties@Blog home">
+        <Logo size={50} class="brand-mark" />
+        <span class="brand-name">Cooties</span>
       </a>
       <div class="nav-links">
-        <a href="/">Research</a>
-        <a href="/about">About</a>
+        <a href="/" aria-current={isResearch ? 'page' : undefined}>Research</a>
+        <a href="/about" aria-current={isAbout ? 'page' : undefined}>About</a>
       </div>
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <slot />
   </main>
 
-  <footer class="footer">
-    <p>&copy; {new Date().getFullYear()} Chegne Eu Joe.</p>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="meta">&copy; {new Date().getFullYear()} Chegne Eu Joe.</p>
+      <p class="meta footer-links"><a href="/">Research</a> · <a href="/about">About</a> · <a href="/rss.xml">RSS</a></p>
+    </div>
   </footer>
 
   <CodeCopyButton />
-
-  <script>
-    // Scroll animation for logo
-    const header = document.querySelector('.header');
-    let lastScroll = 0;
-
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-
-      if (currentScroll > 100) {
-        header?.classList.add('scrolled');
-      } else {
-        header?.classList.remove('scrolled');
-      }
-
-      lastScroll = currentScroll;
-    });
-  </script>
 </body>
 </html>
 
 <style>
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    background: rgba(250, 248, 245, 0.8);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(232, 229, 223, 0.3) 20%,
-      rgba(232, 229, 223, 0.3) 80%,
-      transparent 100%);
-    opacity: 0.6;
+  .site-header {
+    border-bottom: 1px solid var(--rule);
   }
 
   .nav {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0.875rem 2rem;
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    min-height: 4.5rem;
+    padding-block: 0.5rem;
+  }
+
+  .brand {
+    display: inline-flex;
     align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    font-weight: 600;
-    color: var(--color-text);
-    letter-spacing: -0.02em;
-    transition: color 0.2s ease;
+  .brand:hover {
+    color: var(--ink);
   }
 
-  .logo:hover {
-    color: var(--color-primary);
-  }
-
-  .logo-icon {
-    flex-shrink: 0;
+  .brand :global(.brand-mark) {
     display: block;
-    margin-top: -7px;
+    flex-shrink: 0;
+    margin-top: -6px;
   }
 
-  .logo-text {
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    white-space: nowrap;
-  }
-
-  .header.scrolled .logo-text {
-    opacity: 0;
-    transform: translateX(-20px);
-    pointer-events: none;
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
   }
 
   .nav-links {
     display: flex;
-    gap: 2.5rem;
-    align-items: center;
+    gap: 1.75rem;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
   }
 
   .nav-links a {
-    color: var(--color-text-muted);
-    font-weight: 500;
-    font-size: 0.95rem;
-    position: relative;
-    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-2);
+    text-decoration: none;
   }
 
-  .nav-links a:hover {
-    color: var(--color-text);
+  .nav-links a:hover,
+  .nav-links a[aria-current='page'] {
+    color: var(--ink);
   }
 
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 0;
-    width: 0;
-    height: 1.5px;
-    background: var(--color-primary);
-    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .nav-links a:hover::after {
-    width: 100%;
+  .nav-links a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.5em;
   }
 
   main {
-    min-height: calc(100vh - 200px);
+    min-height: calc(100vh - 12rem);
   }
 
-  .footer {
-    border-top: 1px solid var(--color-border);
-    padding: 3rem 2rem;
-    text-align: center;
-    color: var(--color-text-muted);
-    margin-top: 6rem;
+  .site-footer {
+    margin-top: 7rem;
+    border-top: 1px solid var(--rule);
   }
 
-  @media (max-width: 768px) {
+  /* Pages that end on a full-bleed band meet the footer directly. */
+  main:has(> :last-child.band) + .site-footer {
+    margin-top: 0;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-block: 1.5rem 2rem;
+  }
+
+  .footer-inner a {
+    display: inline-block;
+    padding-block: 0.6rem;
+    text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
     .nav {
-      padding: 1rem 1.5rem;
-    }
-
-    .logo {
-      font-size: 1.2rem;
+      min-height: 3.5rem;
     }
 
     .nav-links {
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
-    .nav-links a {
-      font-size: 0.9rem;
+    .site-footer {
+      margin-top: 5rem;
+    }
+
+    main:has(> :last-child.band) + .site-footer {
+      margin-top: 0;
     }
   }
 </style>

@@ -29,9 +29,8 @@
         "category": {
           "type": "string",
           "enum": [
-            "AI",
-            "Cybersecurity",
-            "AI / Cyber"
+            "AI safety",
+            "Cybersecurity"
           ]
         },
         "tags": {

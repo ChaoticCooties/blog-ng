@@ -1,0 +1,55 @@
+{
+  "title": "Choose the visual world",
+  "question": "Your blog documents experiments: what you tried, what broke, what you found. The roll landed on the research notebook. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Research Notebook",
+      "kicker": "THE ROLL",
+      "lineage": "Bound quad-ruled laboratory notebooks, as kept by working researchers",
+      "thesis": "Every post is a dated notebook entry: hypothesis, method, result, kept to the standard of a lab record.",
+      "palette": ["#FBFCFD", "#CFDDEA", "#18212E", "#C23B2A"],
+      "materials": ["quad-ruled blue grid in the margins only", "red margin rule", "blue-black ink", "taped-in figure plates with caption strips"],
+      "viewport": "Index opens as the notebook's contents page: entry numbers, dates, and titles ruled on a grid, with the Cooties robot as the notebook's owner stamp.",
+      "risk": "Tips into skeuomorphic costume if the grid reaches into the reading column."
+    },
+    {
+      "id": "challenger-swiss",
+      "label": "Swiss Research Series",
+      "lineage": "Swiss International Style concert-poster series",
+      "thesis": "One modular grid disciplines every post, so four posts read as a deliberate series, not a sparse list.",
+      "case": "Fuses well: categories become one signal color each and the grid carries rigor; loses some warmth and the hands-on voice.",
+      "hero": "https://impeccable.style/worlds/cards/design-canon-swiss-grid-poster-wall-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/design-canon-swiss-grid-poster-wall.webp"
+    },
+    {
+      "id": "challenger-zine",
+      "label": "Annotated Explainer",
+      "lineage": "Hand-drawn technical zines",
+      "thesis": "Marker annotations and draw-on arrows walk readers through your diagrams like a colleague at a whiteboard.",
+      "case": "Fuses partly: great for your diagram-heavy posts, but reads less rigorous than the research-lab references you named.",
+      "hero": "https://impeccable.style/worlds/cards/hand-drawn-zine-explainer-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/hand-drawn-zine-explainer.webp"
+    },
+    {
+      "id": "challenger-wayfinding",
+      "label": "Terminal Wayfinding",
+      "lineage": "Airport signage systems",
+      "thesis": "Sticky yellow sign bands orient readers through long posts section by section.",
+      "case": "Fuses poorly because long-form reading has one path, so decision-point signage adds noise rather than orientation.",
+      "hero": "https://impeccable.style/worlds/cards/wayfinding-cartography-signage-terminal-yellow-wayfinding-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/wayfinding-cartography-signage-terminal-yellow-wayfinding.webp"
+    }
+  ],
+  "reroll": true,
+  "canon": true,
+  "canonCard": {
+    "label": "Research-lab journal",
+    "thesis": "The Goodfire / Anthropic / Transformer Circuits standard, executed at full craft.",
+    "palette": ["#FFFFFF", "#1F1F1E", "#6B6B66", "#2F5BD3"],
+    "materials": ["white page", "workhorse sans body", "margin notes", "numbered figures"],
+    "viewport": "A quiet masthead, then a dated list of posts with titles, one-line summaries, and figure thumbnails.",
+    "risk": "Looks like every lab blog; the author's hands-on voice has to carry distinctiveness."
+  },
+  "steer": true
+}

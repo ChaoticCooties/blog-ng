@@ -1,104 +1,88 @@
 ---
 interface Props {
   title: string;
-  date: string;
+  date: Date;
   description: string;
   slug: string;
   category?: string;
+  featured?: boolean;
 }
 
-const { title, date, description, slug, category = 'Research' } = Astro.props;
+const { title, date, description, slug, category = 'Research', featured = false } = Astro.props;
 
-const formattedDate = new Date(date).toLocaleDateString('en-US', {
+const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
-  month: 'short',
-  day: 'numeric'
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
 });
-
-// Category color mapping - complementary to orange theme
-const categoryColors: Record<string, string> = {
-  'AI': '#F05D23',                    // Primary orange
-  'Cybersecurity': '#70A37F',         // Sage green
-  'AI / Cyber': '#D4A015'             // Warm golden yellow
-};
-
-const categoryColor = categoryColors[category] || '#6B6B6B';
 ---
 
-<article class="post-card">
-  <div class="post-header">
-    <span class="category" style={`background-color: ${categoryColor}; color: white;`}>
-      {category}
-    </span>
-    <time class="date">{formattedDate}</time>
-  </div>
-  <a href={`/blog/${slug}`} class="post-link">
-    <h2 class="post-title">{title}</h2>
-    <p class="post-description">{description}</p>
-  </a>
+<article class:list={["post-row", { featured }]}>
+  <h2 class="post-title">
+    <a href={`/blog/${slug}`}>{title}</a>
+  </h2>
+  <p class="post-description">{description}</p>
+  <p class="post-meta">
+    <span class="tag-pill">{category}</span>
+    <time datetime={date.toISOString()}>{formattedDate}</time>
+  </p>
 </article>
 
 <style>
-  .post-card {
-    padding: 2.5rem 0;
-    border-bottom: 1px solid var(--color-border);
-    transition: var(--transition);
+  .post-row {
+    position: relative;
+    padding-block: 2rem 2.25rem;
+    border-top: 1px solid var(--rule-strong);
   }
-  
-  .post-card:hover {
-    transform: translateX(8px);
+
+  .post-title {
+    font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+    line-height: 1.3;
+    margin-bottom: 0.625rem;
   }
-  
-  .post-header {
+
+  .featured .post-title {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  .featured .post-description {
+    font-size: 1.1875rem;
+  }
+
+  .post-title a {
+    text-decoration: none;
+    transition: color 0.2s var(--ease-out);
+  }
+
+  /* The whole row is the hit target; the title link carries the accessible name. */
+  .post-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .post-row:hover .post-title a {
+    color: var(--accent);
+  }
+
+  .post-description {
+    color: var(--ink-2);
+    font-size: 1.0625rem;
+    max-width: 58ch;
+  }
+
+  .post-meta {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .category {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.35rem 0.875rem;
-    border-radius: 6px;
-  }
-  
-  .date {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-  }
-  
-  .post-link {
-    display: block;
-    color: inherit;
-  }
-  
-  .post-title {
-    font-size: 1.75rem;
-    margin-bottom: 0.75rem;
-    color: var(--color-text);
-    transition: var(--transition);
-  }
-  
-  .post-card:hover .post-title {
-    color: var(--color-primary);
-  }
-  
-  .post-description {
-    color: var(--color-text-muted);
-    line-height: 1.6;
-    margin: 0;
-  }
-  
-  @media (max-width: 768px) {
-    .post-card {
-      padding: 1.5rem 0;
-    }
-    
-    .post-title {
-      font-size: 1.35rem;
-    }
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
   }
 </style>

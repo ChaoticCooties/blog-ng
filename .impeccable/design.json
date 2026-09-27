@@ -1,0 +1,674 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-26T12:56:22.242Z",
+  "title": "Design System: Cooties@Blog",
+  "extensions": {
+    "colorMeta": {
+      "fern": {
+        "role": "primary",
+        "displayName": "Fern",
+        "canonical": "oklch(49.6% 0.083 155)",
+        "tonalRamp": [
+          "#001103",
+          "#002F10",
+          "#114F2E",
+          "#37714E",
+          "#5B9570",
+          "#7FBB94",
+          "#A2DFB6",
+          "#D5F9E0"
+        ]
+      },
+      "forest": {
+        "role": "primary",
+        "displayName": "Forest",
+        "canonical": "oklch(30.4% 0.041 155)",
+        "tonalRamp": [
+          "#040E07",
+          "#122A1B",
+          "#304939",
+          "#516A59",
+          "#738E7C",
+          "#97B3A0",
+          "#B9D6C3",
+          "#E2F4E8"
+        ]
+      },
+      "fern-wash": {
+        "role": "primary",
+        "displayName": "Fern Wash",
+        "canonical": "oklch(91.8% 0.024 139)",
+        "tonalRamp": [
+          "#080D07",
+          "#1E271C",
+          "#3C463A",
+          "#5C675A",
+          "#7F8A7C",
+          "#A3AFA0",
+          "#C6D2C3",
+          "#EAF1E8"
+        ]
+      },
+      "tag-green": {
+        "role": "primary",
+        "displayName": "Tag Green",
+        "canonical": "oklch(91.5% 0.026 134)",
+        "tonalRamp": [
+          "#090D06",
+          "#1F271A",
+          "#3D4638",
+          "#5D6758",
+          "#808A7A",
+          "#A4AF9F",
+          "#C7D2C1",
+          "#EAF1E7"
+        ]
+      },
+      "contour-sage": {
+        "role": "secondary",
+        "displayName": "Contour Sage",
+        "canonical": "oklch(71.8% 0.059 142)",
+        "tonalRamp": [
+          "#030F03",
+          "#112B0F",
+          "#2F4A2D",
+          "#4F6C4D",
+          "#72906F",
+          "#96B593",
+          "#B8D8B5",
+          "#E1F5DF"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Danger",
+        "canonical": "oklch(51.2% 0.131 34)",
+        "tonalRamp": [
+          "#1C0300",
+          "#4F0000",
+          "#721F0A",
+          "#95402C",
+          "#B9604B",
+          "#DE816B",
+          "#FFA48C",
+          "#FFD1B8"
+        ]
+      },
+      "lichen": {
+        "role": "neutral",
+        "displayName": "Lichen",
+        "canonical": "oklch(96.3% 0.011 123)",
+        "tonalRamp": [
+          "#0B0C09",
+          "#23251F",
+          "#41433D",
+          "#62645E",
+          "#858780",
+          "#A9ACA5",
+          "#CCCFC7",
+          "#EDEFEA"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(98.6% 0.005 117)",
+        "tonalRamp": [
+          "#0B0B0A",
+          "#242421",
+          "#424340",
+          "#636460",
+          "#868783",
+          "#AAABA7",
+          "#CDCECA",
+          "#EEEFEC"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "oklch(93.6% 0.016 126)",
+        "tonalRamp": [
+          "#0A0C08",
+          "#22251D",
+          "#40443B",
+          "#61655C",
+          "#84887E",
+          "#A8ADA2",
+          "#CBD0C5",
+          "#EDF0E9"
+        ]
+      },
+      "code-bg": {
+        "role": "neutral",
+        "displayName": "Code Background",
+        "canonical": "oklch(94.3% 0.014 128)",
+        "tonalRamp": [
+          "#0A0C08",
+          "#22251E",
+          "#40443C",
+          "#61655C",
+          "#83887F",
+          "#A8ADA3",
+          "#CBD0C6",
+          "#EDF0EA"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "oklch(89.0% 0.022 130)",
+        "tonalRamp": [
+          "#090C07",
+          "#20261B",
+          "#3E4539",
+          "#5F6659",
+          "#82897B",
+          "#A6AE9F",
+          "#C9D1C2",
+          "#EBF0E7"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Rule Strong",
+        "canonical": "oklch(81.3% 0.033 135)",
+        "tonalRamp": [
+          "#080D05",
+          "#1D2817",
+          "#3B4635",
+          "#5B6855",
+          "#7E8B77",
+          "#A2B09B",
+          "#C5D3BE",
+          "#E9F2E5"
+        ]
+      },
+      "moss-ink": {
+        "role": "neutral",
+        "displayName": "Moss Ink",
+        "canonical": "oklch(27.2% 0.027 154)",
+        "tonalRamp": [
+          "#060D08",
+          "#19281E",
+          "#37473C",
+          "#57685C",
+          "#7A8B7F",
+          "#9EB0A3",
+          "#C0D3C6",
+          "#E6F2EA"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "oklch(42.5% 0.028 152)",
+        "tonalRamp": [
+          "#060D08",
+          "#19281D",
+          "#37473B",
+          "#58685C",
+          "#7A8B7E",
+          "#9EB0A2",
+          "#C1D3C5",
+          "#E7F2E9"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "oklch(49.3% 0.027 152)",
+        "tonalRamp": [
+          "#060D08",
+          "#1A281E",
+          "#38473C",
+          "#58685C",
+          "#7A8B7E",
+          "#9FB0A3",
+          "#C1D3C5",
+          "#E7F2E9"
+        ]
+      },
+      "figure-mid": {
+        "role": "neutral",
+        "displayName": "Figure Mid",
+        "canonical": "oklch(62.7% 0.033 147)",
+        "tonalRamp": [
+          "#030F04",
+          "#19281B",
+          "#354536",
+          "#526353",
+          "#718372",
+          "#92A493",
+          "#B4C7B5",
+          "#E1F5E2"
+        ]
+      },
+      "on-deep-strong": {
+        "role": "neutral",
+        "displayName": "On Deep Strong",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#242424",
+          "#404040",
+          "#5D5D5D",
+          "#7D7D7D",
+          "#9E9E9E",
+          "#C1C1C1",
+          "#EEEEEE"
+        ]
+      },
+      "on-deep": {
+        "role": "neutral",
+        "displayName": "On Deep",
+        "canonical": "oklch(93.7% 0.013 152)",
+        "tonalRamp": [
+          "#090C0A",
+          "#1F2621",
+          "#3D453F",
+          "#5E6660",
+          "#808982",
+          "#A5ADA7",
+          "#C8D0CA",
+          "#EBF0EC"
+        ]
+      },
+      "on-deep-2": {
+        "role": "neutral",
+        "displayName": "On Deep 2",
+        "canonical": "oklch(85.6% 0.026 154)",
+        "tonalRamp": [
+          "#060D08",
+          "#1A281E",
+          "#38473C",
+          "#58685D",
+          "#7A8B7F",
+          "#9FB0A3",
+          "#C1D3C6",
+          "#E7F2EA"
+        ]
+      },
+      "on-deep-3": {
+        "role": "neutral",
+        "displayName": "On Deep 3",
+        "canonical": "oklch(74.3% 0.042 154)",
+        "tonalRamp": [
+          "#040E07",
+          "#122A1B",
+          "#304938",
+          "#516B58",
+          "#738E7B",
+          "#97B39F",
+          "#B9D6C2",
+          "#E2F4E7"
+        ]
+      },
+      "on-deep-line": {
+        "role": "neutral",
+        "displayName": "On Deep Line",
+        "canonical": "oklch(51.0% 0.057 157)",
+        "tonalRamp": [
+          "#000F06",
+          "#052C19",
+          "#264B36",
+          "#476D56",
+          "#6A9179",
+          "#8EB69D",
+          "#B0DABF",
+          "#DDF6E6"
+        ]
+      },
+      "on-deep-contour": {
+        "role": "neutral",
+        "displayName": "On Deep Contour",
+        "canonical": "oklch(47.1% 0.057 156)",
+        "tonalRamp": [
+          "#000F06",
+          "#042C18",
+          "#264C36",
+          "#476D56",
+          "#6A9178",
+          "#8EB69C",
+          "#B0DABF",
+          "#DDF6E5"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "About statement headline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page and post titles (h1)."
+      },
+      "quote": {
+        "displayName": "Quote",
+        "purpose": "About proof quote, with fern curly quotes."
+      },
+      "title-featured": {
+        "displayName": "Title featured",
+        "purpose": "Featured (newest) post title on the index."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings (h2)."
+      },
+      "title-list": {
+        "displayName": "Title list",
+        "purpose": "Post-row titles on the index."
+      },
+      "subtitle": {
+        "displayName": "Subtitle",
+        "purpose": "h3 headings, including focus-area titles."
+      },
+      "card-title": {
+        "displayName": "Card title",
+        "purpose": "Post navigation titles and the author name."
+      },
+      "heading-4": {
+        "displayName": "Heading 4",
+        "purpose": "h4 in Geist 600; 1.0625rem inside post bodies."
+      },
+      "standfirst": {
+        "displayName": "Standfirst",
+        "purpose": "Post standfirsts; the About statement lede uses the same slope up to 1.5rem."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Index hero lede in ink-2."
+      },
+      "body-lg": {
+        "displayName": "Body large",
+        "purpose": "About prose paragraphs; featured post description sits at 1.1875rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text in the 40rem column; 1rem below 640px."
+      },
+      "annotation": {
+        "displayName": "Annotation",
+        "purpose": "Literata italic map-annotation labels: side labels, proof attribution; smaller annotations follow the ramp (1.125rem About byline, 0.9375rem prev/next labels, 0.875rem scroll hint)."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Header links, filter chips, buttons, byline values, figure captions, tables, author bio, back link, skip link."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Dates, post-row metadata, footer, contents rail; tabular numerals."
+      },
+      "label-sm": {
+        "displayName": "Label small",
+        "purpose": "Byline terms, tag pills, post tags, copy button, depth-2 contents entries."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Code blocks and inline code."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default easing for every transition and entrance."
+      },
+      {
+        "name": "state-transition",
+        "value": "0.2s var(--ease-out)",
+        "purpose": "Color, border, and background changes on links, chips, and buttons."
+      },
+      {
+        "name": "survey-in",
+        "value": "0.8s var(--ease-out); opacity 0 to --contour-opacity, scale 1.03 to 1",
+        "purpose": "Hero and statement contour fields settle in once on load; off under prefers-reduced-motion."
+      },
+      {
+        "name": "slot-in",
+        "value": "0.4s var(--ease-out); opacity 0 to 1, translateY 4px to 0",
+        "purpose": "Post rows revealed by a filter change."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "640px"
+      },
+      {
+        "name": "split-collapse",
+        "value": "800px"
+      },
+      {
+        "name": "areas-collapse",
+        "value": "1000px"
+      },
+      {
+        "name": "contents-rail",
+        "value": "1440px"
+      },
+      {
+        "name": "rail-full-wide",
+        "value": "1680px"
+      }
+    ],
+    "textures": {
+      "grain": "Inline SVG feTurbulence fractal noise (baseFrequency 0.85, 3 octaves, moss-tinted, alpha 0.12), 220px tile, layered over lichen and paper backgrounds.",
+      "contourMaps": {
+        "hero": "/textures/contours-hero.svg",
+        "statement": "/textures/contours-statement.svg",
+        "band": "/textures/contours-band.svg",
+        "strip": "/textures/contours-strip.svg"
+      },
+      "contourOpacity": {
+        "hero": 0.55,
+        "strip": 0.45,
+        "softBand": 0.28,
+        "forestBand": 0.7
+      },
+      "generator": "scripts/generate-contours.mjs: seeded fBm heightfield with terrain peaks, marching squares, Chaikin smoothing (2 passes); index contour every 5th level (stroke 2.2 vs 0.8); italic elevation numerals placed in a safe area away from text.",
+      "maskConvention": "#000 in mask gradients is an alpha stop (fully shown), paired with transparent (hidden). It shapes the corner ellipse (radial-gradient(ellipse 48% 80% at 100% 0%, #000 45%, transparent 100%)) and the bottom fade (linear-gradient(#000 25%, transparent 85%)), composited with the contour map via mask-composite: intersect. Never painted; not a palette color.",
+      "clip": "Contour fields set overflow: clip and isolation: isolate, so the load-in scale stays inside the band."
+    },
+    "scrollShadow": "Code blocks only: background-attachment local/scroll gradients; 2rem paper covers plus 0.75rem rgb(28 43 33 / 0.14) edges that appear only when a line overflows. An overflow cue, not elevation.",
+    "diagramWidths": {
+      "default": "720px",
+      "fuzzyboundary-diagram": "960px",
+      "context-differential": "900px",
+      "languageambiguity-diagram": "900px",
+      "dual-llm": "880px",
+      "architecture-benchmark": "780px"
+    }
+  },
+  "components": [
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Category filter on the research index; pressed state fills fern.",
+      "html": "<div class=\"ds-filters\"><button class=\"ds-chip\" aria-pressed=\"true\">All <span class=\"ds-count\">6</span></button><button class=\"ds-chip\" aria-pressed=\"false\">AI safety <span class=\"ds-count\">4</span></button></div>",
+      "css": ".ds-filters{display:flex;gap:.5rem;flex-wrap:wrap}.ds-chip{display:inline-flex;align-items:center;gap:.5rem;min-height:40px;padding:.4rem 1rem;border:1px solid var(--rule-strong,#B9C7B2);border-radius:999px;background:var(--paper,#FAFBF7);font-family:Geist,system-ui,sans-serif;font-size:.9375rem;color:var(--ink-2,#435347);cursor:pointer;transition:color .2s cubic-bezier(.16,1,.3,1),border-color .2s cubic-bezier(.16,1,.3,1),background-color .2s cubic-bezier(.16,1,.3,1)}.ds-chip:hover{border-color:var(--ink-3,#56665A);color:var(--ink,#1C2B21)}.ds-chip:focus-visible{outline:2px solid var(--accent,#36704D);outline-offset:3px}.ds-count{font-size:.75rem;font-variant-numeric:tabular-nums;color:var(--ink-3,#56665A)}.ds-chip[aria-pressed=\"true\"]{background:var(--accent,#36704D);border-color:var(--accent,#36704D);color:var(--paper,#FAFBF7)}.ds-chip[aria-pressed=\"true\"] .ds-count{color:var(--paper,#FAFBF7)}"
+    },
+    {
+      "name": "Tag Pill",
+      "kind": "chip",
+      "refersTo": "tag-pill",
+      "description": "Post category label on each post row.",
+      "html": "<span class=\"ds-tag\">Cybersecurity</span>",
+      "css": ".ds-tag{display:inline-block;padding:.2rem .7rem;border-radius:999px;background:var(--tag,#DCE7D6);font-family:Geist,system-ui,sans-serif;font-size:.8125rem;font-weight:500;color:var(--accent,#36704D);line-height:1.5}"
+    },
+    {
+      "name": "Light Button",
+      "kind": "button",
+      "refersTo": "button-light",
+      "description": "Primary action on the forest band.",
+      "html": "<div class=\"ds-deep\"><a class=\"ds-btn-light\" href=\"#\">GitHub</a></div>",
+      "css": ".ds-deep{background:var(--accent-deep,#1D3526);padding:1.5rem}.ds-btn-light{display:inline-flex;align-items:center;min-height:44px;padding:.7rem 1.4rem;border-radius:8px;background:var(--paper,#FAFBF7);border:1px solid var(--paper,#FAFBF7);color:var(--accent-deep,#1D3526);font-family:Geist,system-ui,sans-serif;font-size:.9375rem;font-weight:500;text-decoration:none;transition:background-color .2s cubic-bezier(.16,1,.3,1)}.ds-btn-light:hover{background:var(--bg,#F1F4EC)}.ds-btn-light:focus-visible{outline:2px solid var(--on-deep-strong,#FFFFFF);outline-offset:3px}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action on the forest band.",
+      "html": "<div class=\"ds-deep\"><a class=\"ds-btn-ghost\" href=\"#\">Read the research</a></div>",
+      "css": ".ds-deep{background:var(--accent-deep,#1D3526);padding:1.5rem}.ds-btn-ghost{display:inline-flex;align-items:center;min-height:44px;padding:.7rem 1.4rem;border-radius:8px;border:1px solid var(--on-deep-line,#4A7059);color:var(--on-deep,#E4EDE6);font-family:Geist,system-ui,sans-serif;font-size:.9375rem;font-weight:500;text-decoration:none;transition:color .2s cubic-bezier(.16,1,.3,1),border-color .2s cubic-bezier(.16,1,.3,1)}.ds-btn-ghost:hover{color:var(--on-deep-strong,#FFFFFF);border-color:var(--on-deep,#E4EDE6)}.ds-btn-ghost:focus-visible{outline:2px solid var(--on-deep-strong,#FFFFFF);outline-offset:3px}"
+    },
+    {
+      "name": "Arrow Link",
+      "kind": "custom",
+      "description": "Primary call to action on light surfaces: fern text link with an inline arrow.",
+      "html": "<a class=\"ds-arrow\" href=\"#\"><span>Read the full write-up</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 20 20\" fill=\"none\" aria-hidden=\"true\"><path d=\"M7.5 5l5 5-5 5\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ".ds-arrow{display:inline-flex;align-items:center;gap:.4rem;min-height:44px;font-family:Geist,system-ui,sans-serif;font-weight:500;color:var(--accent,#36704D);text-decoration:none}.ds-arrow span{text-decoration:underline;text-decoration-color:color-mix(in srgb,#36704D 45%,transparent);text-underline-offset:.2em}.ds-arrow svg{transition:transform .2s cubic-bezier(.16,1,.3,1)}.ds-arrow:hover svg{transform:translateX(3px)}.ds-arrow:focus-visible{outline:2px solid var(--accent,#36704D);outline-offset:3px;border-radius:2px}"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "description": "Site header: logo and Literata wordmark, Geist links with a fern underline on the current page. The real logo SVG replaces the placeholder square; never recolor it.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-logo\" aria-hidden=\"true\"></span><span class=\"ds-wordmark\">Cooties</span></a><div class=\"ds-links\"><a href=\"#\" aria-current=\"page\">Research</a><a href=\"#\">About</a></div></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;min-height:4.5rem;border-bottom:1px solid var(--rule,#D6DECF);padding-inline:1rem}.ds-brand{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--ink,#1C2B21)}.ds-logo{width:50px;height:50px;border:1px dashed var(--rule-strong,#B9C7B2)}.ds-wordmark{font-family:Literata,Georgia,serif;font-weight:600;font-size:1.3125rem;letter-spacing:-.02em}.ds-links{display:flex;gap:1.75rem;font-family:Geist,system-ui,sans-serif;font-size:.9375rem}.ds-links a{display:inline-flex;align-items:center;min-height:44px;color:var(--ink-2,#435347);text-decoration:none}.ds-links a:hover,.ds-links a[aria-current=\"page\"]{color:var(--ink,#1C2B21)}.ds-links a[aria-current=\"page\"]{text-decoration:underline;text-decoration-color:var(--accent,#36704D);text-decoration-thickness:2px;text-underline-offset:.5em}.ds-links a:focus-visible{outline:2px solid var(--accent,#36704D);outline-offset:3px}"
+    },
+    {
+      "name": "Post Row",
+      "kind": "card",
+      "description": "Index list row divided by hairlines; the whole row is the hit target and the title turns fern on hover.",
+      "html": "<article class=\"ds-row\"><h2 class=\"ds-row-title\"><a href=\"#\">Project Umbra</a></h2><p class=\"ds-row-desc\">Testing how an agent leaks context across tool boundaries.</p><p class=\"ds-row-meta\"><span class=\"ds-tag\">Cybersecurity</span><time>September 12, 2026</time></p></article>",
+      "css": ".ds-row{position:relative;padding-block:2rem 2.25rem;border-top:1px solid var(--rule-strong,#B9C7B2)}.ds-row-title{font-family:Literata,Georgia,serif;font-weight:500;font-variation-settings:\"opsz\" 24;font-size:1.625rem;line-height:1.3;margin:0 0 .625rem;color:var(--ink,#1C2B21)}.ds-row-title a{color:inherit;text-decoration:none;transition:color .2s cubic-bezier(.16,1,.3,1)}.ds-row-title a::after{content:\"\";position:absolute;inset:0}.ds-row:hover .ds-row-title a{color:var(--accent,#36704D)}.ds-row-title a:focus-visible{outline:2px solid var(--accent,#36704D);outline-offset:3px}.ds-row-desc{margin:0;color:var(--ink-2,#435347);font-size:1.0625rem;max-width:58ch}.ds-row-meta{display:flex;align-items:center;gap:.75rem;margin:1rem 0 0;font-family:Geist,system-ui,sans-serif;font-size:.875rem;color:var(--ink-3,#56665A)}.ds-tag{display:inline-block;padding:.2rem .7rem;border-radius:999px;background:#DCE7D6;font-size:.8125rem;font-weight:500;color:#36704D}"
+    },
+    {
+      "name": "Split Section with Annotation",
+      "kind": "custom",
+      "description": "Standing section structure: italic Literata map annotation in a one-third label column, content in two thirds.",
+      "html": "<section class=\"ds-split\"><p class=\"ds-annot\">Approach</p><div><h2 class=\"ds-h2\">Methods over claims</h2><p class=\"ds-p\">Every post shows the setup, the test, and the result.</p></div></section>",
+      "css": ".ds-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:2rem 4rem;padding:2rem}.ds-annot{margin:0;padding-top:.5rem;font-family:Literata,Georgia,serif;font-style:italic;font-size:1.0625rem;color:var(--ink-3,#56665A)}.ds-h2{margin:0 0 1rem;font-family:Literata,Georgia,serif;font-weight:500;font-variation-settings:\"opsz\" 24;font-size:2rem;line-height:1.18;letter-spacing:-.015em;color:var(--ink,#1C2B21)}.ds-p{margin:0;font-family:Geist,system-ui,sans-serif;font-size:1.125rem;line-height:1.7;color:var(--ink-2,#435347)}"
+    },
+    {
+      "name": "Byline",
+      "kind": "custom",
+      "description": "Post byline as a definition list between two hairlines; columns auto-fit at a 7rem minimum.",
+      "html": "<dl class=\"ds-byline\"><div><dt>Author</dt><dd>Chegne Eu Joe</dd></div><div><dt>Published</dt><dd>September 12, 2026</dd></div><div><dt>Category</dt><dd>Cybersecurity</dd></div><div><dt>Reading time</dt><dd>14 min</dd></div></dl>",
+      "css": ".ds-byline{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(7rem,100%),max-content));justify-content:start;gap:1rem 2rem;margin:0;padding-block:1.25rem;border-block:1px solid var(--rule,#D6DECF);font-family:Geist,system-ui,sans-serif}.ds-byline dt{font-size:.8125rem;color:var(--ink-3,#56665A);margin-bottom:.2rem}.ds-byline dd{margin:0;font-size:.9375rem;color:var(--ink,#1C2B21);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Code Block",
+      "kind": "custom",
+      "refersTo": "code-block",
+      "description": "Paper code block in a positioned wrapper so the copy button stays put while code scrolls; scroll-edge shading on overflow; copied (fern) and failed (danger) states.",
+      "html": "<div class=\"ds-code\"><button class=\"ds-copy\" type=\"button\">Copy</button><pre class=\"ds-pre\" tabindex=\"0\"><code>curl -s https://example.com/api/v1/scan --data '{\"target\": \"supply-chain\", \"depth\": 3}'</code></pre></div><div class=\"ds-code\"><button class=\"ds-copy ds-copy--failed\" type=\"button\">Failed</button><pre class=\"ds-pre\"><code>npm audit --json</code></pre></div>",
+      "css": ".ds-code{position:relative;margin-bottom:1rem}.ds-pre{margin:0;background:linear-gradient(90deg,var(--paper,#FAFBF7) 30%,rgb(250 251 247/0)) left center/2rem 100% no-repeat local,linear-gradient(270deg,var(--paper,#FAFBF7) 30%,rgb(250 251 247/0)) right center/2rem 100% no-repeat local,linear-gradient(90deg,rgb(28 43 33/.14),rgb(28 43 33/0)) left center/.75rem 100% no-repeat scroll,linear-gradient(270deg,rgb(28 43 33/.14),rgb(28 43 33/0)) right center/.75rem 100% no-repeat scroll,var(--paper,#FAFBF7);border:1px solid var(--rule,#D6DECF);border-radius:10px;padding:3.25rem 1.5rem 1.25rem;overflow-x:auto;font-family:'Geist Mono',ui-monospace,monospace;font-size:.875rem;line-height:1.65;color:var(--ink,#1C2B21)}.ds-pre:focus-visible{outline:2px solid var(--accent,#36704D);outline-offset:3px}.ds-copy{position:absolute;top:.625rem;right:.625rem;z-index:1;min-height:32px;padding:.3rem .6rem;background:var(--paper,#FAFBF7);border:1px solid var(--rule-strong,#B9C7B2);border-radius:6px;color:var(--ink-2,#435347);font-family:Geist,system-ui,sans-serif;font-size:.8125rem;font-weight:500;cursor:pointer;transition:color .2s cubic-bezier(.16,1,.3,1),border-color .2s cubic-bezier(.16,1,.3,1)}.ds-copy:hover{border-color:var(--ink-2,#435347);color:var(--ink,#1C2B21)}.ds-copy:focus-visible{outline:2px solid var(--accent,#36704D);outline-offset:3px}.ds-copy--failed{border-color:var(--danger,#A4452F);color:var(--danger,#A4452F)}"
+    },
+    {
+      "name": "Figure with Caption",
+      "kind": "custom",
+      "refersTo": "figure-caption",
+      "description": "Unframed diagram with an HTML caption numbered by a CSS counter: italic Literata fern 'Figure N.', bold title, caption text.",
+      "html": "<div class=\"ds-figs\"><figure class=\"ds-fig\"><div class=\"ds-fig-scroll\"><svg viewBox=\"0 0 320 90\" role=\"img\" aria-label=\"Two nodes joined by an arrow\"><defs><marker id=\"ds-ah\" markerWidth=\"10\" markerHeight=\"6\" refX=\"9\" refY=\"3\" orient=\"auto\"><polygon points=\"0 0,10 3,0 6\" fill=\"#7C8E7D\"/></marker></defs><rect x=\"10\" y=\"20\" width=\"110\" height=\"50\" rx=\"6\" fill=\"#FAFBF7\" stroke=\"#B9C7B2\" stroke-width=\"1.5\"/><text x=\"65\" y=\"50\" text-anchor=\"middle\" font-family=\"Geist,system-ui,sans-serif\" font-size=\"12\" fill=\"#435347\">Input</text><line x1=\"124\" y1=\"45\" x2=\"192\" y2=\"45\" stroke=\"#7C8E7D\" stroke-width=\"2\" marker-end=\"url(#ds-ah)\"/><rect x=\"200\" y=\"20\" width=\"110\" height=\"50\" rx=\"6\" fill=\"#DCE8D9\" stroke=\"#36704D\" stroke-width=\"1.5\"/><text x=\"255\" y=\"50\" text-anchor=\"middle\" font-family=\"Geist,system-ui,sans-serif\" font-size=\"12\" font-weight=\"600\" fill=\"#36704D\">Model</text></svg></div><figcaption><span class=\"ds-fig-title\">Context flow.</span> The input passes to the model with no filtering step.</figcaption></figure></div>",
+      "css": ".ds-figs{counter-reset:figure}.ds-fig{counter-increment:figure;margin:0}.ds-fig-scroll{overflow-x:auto}.ds-fig svg{display:block;width:100%;height:auto}.ds-fig figcaption{max-width:40rem;margin:1rem auto 0;font-family:Geist,system-ui,sans-serif;font-size:.9375rem;line-height:1.55;color:var(--ink-2,#435347)}.ds-fig figcaption::before{content:'Figure ' counter(figure) '. ';font-family:Literata,Georgia,serif;font-style:italic;color:var(--accent,#36704D)}.ds-fig-title{font-weight:600;color:var(--ink,#1C2B21)}"
+    },
+    {
+      "name": "Author Block",
+      "kind": "custom",
+      "description": "End-of-post author block between hairlines: Literata name, ink-2 bio, fern GitHub link.",
+      "html": "<aside class=\"ds-author\"><p class=\"ds-author-name\">Chegne Eu Joe</p><p class=\"ds-author-bio\">Offensive security professional and aspiring AI safety researcher.</p><a class=\"ds-author-link\" href=\"#\">GitHub</a></aside>",
+      "css": ".ds-author{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:.25rem 1rem;padding:1.25rem 0;border-block:1px solid var(--rule,#D6DECF)}.ds-author p{margin:0}.ds-author-name{font-family:Literata,Georgia,serif;font-weight:500;font-size:1.125rem;color:var(--ink,#1C2B21)}.ds-author-bio{font-family:Geist,system-ui,sans-serif;font-size:.9375rem;color:var(--ink-2,#435347)}.ds-author-link{display:inline-flex;align-items:center;min-height:44px;font-family:Geist,system-ui,sans-serif;font-weight:500;color:var(--accent,#36704D);text-decoration:none}.ds-author-link:hover{text-decoration:underline;text-underline-offset:.2em}.ds-author-link:focus-visible{outline:2px solid var(--accent,#36704D);outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Survey Journal",
+    "overview": "The site is a research-lab journal in the structure of Transformer Circuits, OpenAI interpretability, and Goodfire: split label-and-content layouts, a byline set as a definition list, a centered reading measure, and numbered figures that break out to a wider column. That structure sits in a naturalist field survey. The page is lichen off-white with a fine paper grain, the ink is moss, the one accent is fern, and heroes and section bands carry generated topographic contour fields with heavier index contours and italic elevation numerals.\n\nThe survey material frames the work and never competes with it. Texture lives at the edges of the reading experience (heroes, bands, the top of a post) and falls away before the text starts. Post bodies are clean pages. Density is low and deliberate: generous band padding, one accent, hairline rules instead of boxes. The system rejects stock topographic wallpaper and the cream-and-serif nature look; the contours are generated for each surface and placed to avoid text.",
+    "keyCharacteristics": [
+      "Lichen page with paper grain; moss ink; a single fern accent; a forest-green band for emphasis.",
+      "Generated contour fields, applied as CSS masks, only in heroes and section bands.",
+      "Literata for titles and italic map-annotation labels; Geist for text and UI.",
+      "Split label/content layout as the standing section structure.",
+      "Distill-style post column: 40rem text measure, 60rem wide figure column, unframed figures with numbered HTML captions.",
+      "The robot logo appears once, in the site header, unchanged."
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Fern is the only chromatic accent. Any new emphasis uses fern, a heavier rule, or type weight; it never introduces a second hue. Danger is a status color for failure, not an accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mask Color Rule",
+        "body": "Contour lines take their color from the `--contour` custom property through a CSS mask. Change the line color by setting `--contour` on the surface, as the forest band does; never bake color into the texture files.",
+        "section": "colors"
+      },
+      {
+        "name": "The Alpha Stop Convention",
+        "body": "The `#000` values in the stylesheet are mask-gradient alpha stops, not colors. In `mask-image` gradients, black means \"fully shown\" and `transparent` means \"hidden\"; they shape where the contour field shows (the top-right corner ellipse and the bottom fade). They're never painted, so they aren't palette colors. Write new mask stops the same way.",
+        "section": "colors"
+      },
+      {
+        "name": "The Snapped Figure Rule",
+        "body": "Diagram SVGs use palette tokens only: `fern`, `fern-wash`, `paper`, `panel`, `rule-strong`, `moss-ink`, `ink-2`, `ink-3`, plus `figure-mid` for arrows and points. Don't introduce a new hex inside a figure.",
+        "section": "colors"
+      },
+      {
+        "name": "The Map Annotation Rule",
+        "body": "Labels that name a section or a field are Literata italic in sentence case, like notes on a survey sheet. They're never uppercase, letterspaced, or set in Geist.",
+        "section": "typography"
+      },
+      {
+        "name": "The Fixed Optical Size Rule",
+        "body": "Literata headings turn off automatic optical sizing and hold `opsz` 24 at weight 500 at every size, so display and section titles share one cut.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ramp Rule",
+        "body": "New text takes a size from the hierarchy in the preceding list. Interface text is 0.9375rem, metadata 0.875rem, and fine labels 0.8125rem; don't add in-between steps.",
+        "section": "typography"
+      },
+      {
+        "name": "The Clean Page Rule",
+        "body": "Texture lives in heroes and section bands only. Post bodies have no contours behind reading text; the post header strip fades out before the body starts.",
+        "section": "layout"
+      },
+      {
+        "name": "The Clear Ground Rule",
+        "body": "Contour lines and elevation labels stay clear of text areas. Each texture is generated with flat ground where its text sits, and when a layout still puts text over relief, use the corner mask (as the About statement does) to confine contours to the top-right corner.",
+        "section": "layout"
+      },
+      {
+        "name": "The Clear Rail Rule",
+        "body": "The contents rail never overlaps content. It sits in the margin, narrows the figure column when the margin is tight, and hides near the footer.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Survey Rule",
+        "body": "Surfaces never lift. To separate or emphasize, change the tone, add a hairline, or add a 2px fern top rule; never add a shadow. Scroll-edge shading is an overflow cue, not elevation.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Unframed Figure Rule",
+        "body": "Figures sit directly on the page. Don't put diagrams in boxed panels, cards, or tinted backgrounds.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do use the split label/content layout for new sections, with an italic Literata annotation in the label column.",
+      "Do put contour fields only in heroes and section bands, and set `--contour-opacity` for the surface (0.55 hero, 0.45 strip, 0.28 soft band, 0.7 forest band).",
+      "Do keep contours clear of text, and use the corner or fade mask when text and relief would overlap.",
+      "Do break figures, images, and tables out to the 60rem wide column and leave them unframed.",
+      "Do caption every diagram with an HTML figcaption (bold title, then text) and let the counter number it.",
+      "Do keep diagram SVGs legible on mobile at their native scale with a per-diagram `--diagram-width`, horizontal scroll, and the italic scroll hint.",
+      "Do separate content with hairline rules and tonal steps instead of shadows or boxes.",
+      "Do take every font size from the recorded ramp.",
+      "Do keep every interactive target at least 44px tall, with a 2px fern focus outline (`on-deep-strong` on the forest band)."
+    ],
+    "donts": [
+      "Don't recolor, redraw, crop, or restyle the robot logo, and don't use it anywhere but the site header (not in heroes, bands, or decoration).",
+      "Don't place contours or elevation labels behind post body text.",
+      "Don't introduce a second accent hue or colors outside the moss and fern range; `danger` is for failure states only.",
+      "Don't add new hex values inside diagrams; snap to palette tokens and `figure-mid`.",
+      "Don't put figure titles inside the SVG.",
+      "Don't add box shadows or lifted cards.",
+      "Don't put diagrams in bordered or tinted panels.",
+      "Don't let the contents rail overlap figures or the footer.",
+      "Don't use stock topographic images or tile a contour pattern as wallpaper; generate textures with the script so relief avoids text.",
+      "Don't replace the research-journal structure with a themed costume concept."
+    ]
+  }
+}

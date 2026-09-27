@@ -1,0 +1,55 @@
+{
+  "title": "Choose the nature world",
+  "question": "Research-lab structure stays. The roll landed on a field survey: soft topographic contour lines as the organic texture. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Field Survey",
+      "kicker": "THE ROLL",
+      "lineage": "Naturalist field-station surveys and topographic maps",
+      "thesis": "Each post is a surveyed site; soft contour lines drawn like terrain give heroes and bands their organic texture while posts stay clean.",
+      "palette": ["#F2F5EE", "#DCE6D6", "#3E7A55", "#1E3527"],
+      "materials": ["hand-drawn-feel topographic contour lines", "fine paper grain", "lichen-tinted off-white", "moss and fern greens"],
+      "viewport": "Index hero sits on a pale lichen field crossed by soft contour lines rising around the robot logo, then the post list on a clean band.",
+      "risk": "Contour lines read as stock topo wallpaper if they spread past heroes and bands."
+    },
+    {
+      "id": "challenger-exposure",
+      "label": "Exposure Record",
+      "lineage": "Darkroom printers' exposure record cards",
+      "thesis": "Soft hatching densities and translucent overlapping sheets become the texture.",
+      "case": "Fuses partly: hatching can render in soft greens, but the darkroom grammar reads technical rather than natural.",
+      "hero": "https://impeccable.style/worlds/cards/operate-b-exposure-record-zone-sheets-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/operate-b-exposure-record-zone-sheets.webp"
+    },
+    {
+      "id": "challenger-provenance",
+      "label": "Provenance Ribbon",
+      "lineage": "Museum provenance and custody records",
+      "thesis": "One continuous ribbon threads through dated posts like an object's custody history.",
+      "case": "Fuses poorly because its archival buff and red silk fight the soft green brief, and posts aren't a custody chain.",
+      "hero": "https://impeccable.style/worlds/cards/exhibition-museum-curation-provenance-ribbon-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/exhibition-museum-curation-provenance-ribbon.webp"
+    },
+    {
+      "id": "challenger-cloud",
+      "label": "Cloud Quarry",
+      "lineage": "Surreal weather landscapes",
+      "thesis": "Soft cumulus masses and sky voids give the page an atmospheric, weathered texture.",
+      "case": "Fuses poorly because it reads sky and dream rather than green nature, and volumetric effects distract from reading.",
+      "hero": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-cloud-quarry-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-cloud-quarry.webp"
+    }
+  ],
+  "reroll": true,
+  "canon": true,
+  "canonCard": {
+    "label": "Sage research journal",
+    "thesis": "The research-lab journal in a soft sage palette with gentle paper grain, played straight.",
+    "palette": ["#F3F6F0", "#E1EADC", "#4A7C59", "#1F3326"],
+    "materials": ["sage-tinted page", "subtle paper grain", "hairline rules", "moss accent"],
+    "viewport": "Quiet header, sage-tinted hero with title and lede, then the post list.",
+    "risk": "Nature reads mostly through color; the texture stays faint."
+  },
+  "steer": true
+}

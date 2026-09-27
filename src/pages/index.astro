@@ -3,267 +3,217 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
-// Get all blog posts from content collections
-const allPosts = await getCollection('blog', ({ data }) => {
-  return data.draft !== true;
-});
+const published = await getCollection('blog', ({ data }) => data.draft !== true);
 
-// Sort posts by date (newest first)
-const posts = allPosts.sort((a, b) =>
-  b.data.date.valueOf() - a.data.date.valueOf()
-).map(post => ({
-  title: post.data.title,
-  date: post.data.date.toISOString().split('T')[0],
-  description: post.data.description,
-  slug: post.slug,
-  category: post.data.category,
-  tags: post.data.tags || []
-}));
+// Newest first
+const posts = published
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map((post) => ({
+    title: post.data.title,
+    date: post.data.date,
+    description: post.data.description,
+    slug: post.slug,
+    category: post.data.category,
+  }));
 
-// Get unique categories from posts
-const uniqueCategories = [...new Set(posts.map(post => post.category))];
-const categories = ['All', ...uniqueCategories.sort()];
+const categories = ['All', ...[...new Set(posts.map((post) => post.category))].sort()];
+const countFor = (cat: string) =>
+  cat === 'All' ? posts.length : posts.filter((p) => p.category === cat).length;
 ---
 
 <BaseLayout
-  title="Cooties@Blog | Cybersecurity & AI Research Insights"
-  description="Exploring the intersection of Cybersecurity and Machine Learning through in-depth technical articles, research insights, and practical experiments."
+  title="Cooties@Blog | AI and security research"
+  description="Technical write-ups on AI security, LLM pentesting, and supply-chain vulnerability research."
 >
-  <div class="container">
-    <div class="hero">
-      <h1 class="hero-title">Research</h1>
-      <p class="hero-description">
-        A collection of technical projects and experiments, exploring how emerging technologies work in practice.
-      </p>
+  <section class="band hero contour-field contour-field--hero">
+    <div class="container">
+      <div class="hero-text">
+        <h1>Research</h1>
+        <p class="lede">
+          Technical projects and experiments that test how emerging technologies work in practice, with a focus on AI security.
+        </p>
+      </div>
     </div>
-    
-    <div class="filters">
-      <div class="filter-group">
-        {categories.map(cat => (
-          <button
-            class={`filter-btn ${cat === 'All' ? 'active' : ''}`}
-            data-category={cat}
-          >
-            {cat}
-          </button>
+  </section>
+
+  <section class="band band--white listing" aria-label="Posts">
+    <div class="container split">
+      <aside class="filters-col">
+        <p class="side-label" id="filter-label">Filter by</p>
+        <div class="filters" role="group" aria-labelledby="filter-label">
+          {categories.map((cat) => (
+            <button
+              type="button"
+              class="filter-btn"
+              data-category={cat}
+              aria-pressed={cat === 'All' ? 'true' : 'false'}
+            >
+              {cat}
+              <span class="count">{countFor(cat)}<span class="visually-hidden"> posts</span></span>
+            </button>
+          ))}
+        </div>
+      </aside>
+
+      <div class="posts">
+        {posts.map((post, index) => (
+          <div class="post-slot" data-category={post.category}>
+            <PostCard {...post} featured={index === 0} />
+          </div>
         ))}
       </div>
     </div>
-
-    <div class="posts">
-      {posts.map(post => (
-        <div data-category={post.category}>
-          <PostCard {...post} />
-        </div>
-      ))}
-    </div>
-  </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-  }
-  
   .hero {
-    margin-bottom: 4rem;
-    animation: fadeInUp 0.6s ease-out;
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    --contour-opacity: 0.55;
   }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+
+
+
+
+  .hero-text {
+    max-width: 48rem;
   }
-  
-  .hero-title {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+
+  .hero-text h1 {
+    margin-bottom: 1.25rem;
   }
-  
-  .hero-description {
-    font-size: 1.25rem;
-    color: var(--color-text-muted);
-    max-width: 600px;
+
+  .lede {
+    font-size: clamp(1.125rem, 1.05rem + 0.45vw, 1.375rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+    max-width: 36ch;
   }
-  
+
+  .filters-col {
+    position: sticky;
+    top: 2rem;
+    align-self: start;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule-strong);
+  }
+
   .filters {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  
-  .filter-group {
-    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    margin-top: 1rem;
   }
-  
+
   .filter-btn {
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    background: var(--paper);
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    color: var(--ink-2);
     cursor: pointer;
-    transition: var(--transition);
+    transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
   }
-  
+
   .filter-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-text);
+    border-color: var(--ink-3);
+    color: var(--ink);
   }
-  
-  .filter-btn.active {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
+
+  .filter-btn[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
   }
-  
+
+  .count {
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+
+  .filter-btn[aria-pressed='true'] .count {
+    color: var(--paper);
+  }
+
   .posts {
-    animation: fadeIn 0.8s ease-out 0.2s both;
+    border-bottom: 1px solid var(--rule-strong);
   }
 
-  .posts > div {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .posts > div.filtering-out {
-    opacity: 0;
-    transform: translateY(-6px);
-    pointer-events: none;
-  }
-
-  .posts > div.hidden {
+  .post-slot[hidden] {
     display: none;
   }
 
-  .posts > div.filtering-in {
-    animation: filterIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  .post-slot.revealed {
+    animation: slot-in 0.4s var(--ease-out) both;
   }
 
-  @keyframes filterIn {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  @keyframes slot-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post-slot.revealed { animation: none; }
   }
-  
-  @media (max-width: 768px) {
-    .container {
-      padding: 2rem 1.5rem;
-    }
 
-    .hero-title {
-      font-size: 2.5rem;
-    }
+  @media (max-width: 800px) {
 
-    .hero-description {
-      font-size: 1.1rem;
+
+    .filters-col {
+      position: static;
+      border-top: 0;
+      padding-top: 0;
     }
 
     .filters {
-      flex-direction: column;
-      align-items: flex-start;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      min-height: 44px;
     }
   }
 </style>
 
 <script>
-  // Category filtering with ultra-smooth animations
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const posts = document.querySelectorAll('.posts > div');
+  // Category filter. The selected topic is kept in the URL (?topic=)
+  // so it survives Back and can be shared.
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.filter-btn')];
+  const slots = document.querySelectorAll<HTMLElement>('.post-slot');
 
-  filterButtons.forEach(button => {
+  const applyFilter = (category: string, animate: boolean) => {
+    buttons.forEach((btn) => btn.setAttribute('aria-pressed', String(btn.dataset.category === category)));
+    slots.forEach((slot) => {
+      const show = category === 'All' || slot.dataset.category === category;
+      const wasHidden = slot.hidden;
+      slot.hidden = !show;
+      slot.classList.toggle('revealed', animate && show && wasHidden);
+    });
+  };
+
+  const fromUrl = new URLSearchParams(location.search).get('topic');
+  if (fromUrl && buttons.some((btn) => btn.dataset.category === fromUrl)) {
+    applyFilter(fromUrl, false);
+  }
+
+  buttons.forEach((button) => {
     button.addEventListener('click', () => {
-      const category = button.getAttribute('data-category');
-
-      // Update active button
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-
-      // Separate posts into two groups
-      const toHide: Element[] = [];
-      const toShow: Element[] = [];
-
-      posts.forEach((post) => {
-        const postCategory = post.getAttribute('data-category');
-        const shouldShow = category === 'All' || postCategory === category;
-        const isCurrentlyHidden = post.classList.contains('hidden');
-
-        if (!shouldShow && !isCurrentlyHidden) {
-          toHide.push(post);
-        } else if (shouldShow && isCurrentlyHidden) {
-          toShow.push(post);
-        } else if (shouldShow && !isCurrentlyHidden) {
-          // Already visible, clean state
-          post.classList.remove('filtering-out', 'filtering-in');
-        }
-      });
-
-      // First, fade out posts that need to hide
-      toHide.forEach((post) => {
-        post.classList.remove('filtering-in');
-        post.classList.add('filtering-out');
-      });
-
-      // After fade out completes, hide them and show new ones
-      setTimeout(() => {
-        toHide.forEach((post) => {
-          post.classList.add('hidden');
-          post.classList.remove('filtering-out');
-        });
-
-        // Show new posts with staggered animation
-        toShow.forEach((post, index) => {
-          post.classList.remove('hidden', 'filtering-out');
-
-          setTimeout(() => {
-            requestAnimationFrame(() => {
-              post.classList.add('filtering-in');
-
-              setTimeout(() => {
-                post.classList.remove('filtering-in');
-              }, 300);
-            });
-          }, index * 40); // 40ms stagger between each item
-        });
-      }, 250);
+      const category = button.dataset.category ?? 'All';
+      applyFilter(category, true);
+      const url = new URL(location.href);
+      if (category === 'All') url.searchParams.delete('topic');
+      else url.searchParams.set('topic', category);
+      history.replaceState(null, '', url);
     });
   });
 </script>

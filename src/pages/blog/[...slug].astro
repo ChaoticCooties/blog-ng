@@ -4,241 +4,720 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog');
-  return blogEntries.map(entry => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+  const published = blogEntries
+    .filter((entry) => entry.data.draft !== true)
+    .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+  const link = (entry) => (entry ? { slug: entry.slug, title: entry.data.title } : null);
+
+  return blogEntries.map((entry) => {
+    const index = published.findIndex((p) => p.slug === entry.slug);
+    return {
+      params: { slug: entry.slug },
+      props: {
+        entry,
+        older: index > 0 ? link(published[index - 1]) : null,
+        newer: index >= 0 ? link(published[index + 1]) : null,
+      },
+    };
+  });
 }
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { entry, older, newer } = Astro.props;
+const { Content, headings } = await entry.render();
 
-// Category color mapping - same as PostCard
-const categoryColors: Record<string, string> = {
-  'AI': '#F05D23',
-  'Cybersecurity': '#70A37F',
-  'AI / Cyber': '#D4A015'
-};
+const WORDS_PER_MINUTE = 230;
+const MIN_SECTIONS_FOR_CONTENTS = 3;
 
-const categoryColor = categoryColors[entry.data.category] || '#F05D23';
+const minutes = Math.max(1, Math.round((entry.body ?? '').split(/\s+/).length / WORDS_PER_MINUTE));
+// Contents rail lists every section level from h2 to h4, indented by depth.
+const sections = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
+const topDepth = Math.min(...sections.map((h) => h.depth));
+const showContents = sections.length >= MIN_SECTIONS_FOR_CONTENTS;
+// remark-math syntax: $$ blocks or $...$ inline spans.
+const hasMath = /\$\$|\$[^\s$][^$\n]*\$/.test(entry.body ?? '');
+const published = entry.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 ---
 
-<BaseLayout
-  title={entry.data.title}
-  description={entry.data.description}
->
-  <article class="blog-post">
-    <header class="post-header">
-      <div class="post-meta">
-        <span class="category" style={`background-color: ${categoryColor}; color: white;`}>
-          {entry.data.category}
-        </span>
-        <time datetime={entry.data.date.toISOString()}>
-          {entry.data.date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </time>
-      </div>
+<BaseLayout title={`${entry.data.title} | Cooties@Blog`} description={entry.data.description} math={hasMath}>
+  <article class="article">
+    <header class="article-header contour-field contour-field--strip contour-field--fade">
       <h1>{entry.data.title}</h1>
-      <p class="post-description">{entry.data.description}</p>
-      {entry.data.tags && entry.data.tags.length > 0 && (
-        <div class="tags">
-          {entry.data.tags.map(tag => (
-            <span class="tag">#{tag}</span>
-          ))}
+      <p class="standfirst">{entry.data.description}</p>
+
+      <dl class="byline">
+        <div>
+          <dt>Author</dt>
+          <dd>Chegne Eu Joe</dd>
         </div>
-      )}
+        <div>
+          <dt>Published</dt>
+          <dd><time datetime={entry.data.date.toISOString()}>{published}</time></dd>
+        </div>
+        <div>
+          <dt>Category</dt>
+          <dd>{entry.data.category}</dd>
+        </div>
+        <div>
+          <dt>Reading time</dt>
+          <dd>{minutes} min</dd>
+        </div>
+      </dl>
     </header>
 
-    <div class="post-content">
+    {showContents && (
+      <nav class="contents" aria-label="Contents">
+        <details class="contents-details" open>
+          <summary class="contents-title">Contents <span class="contents-count">({sections.length})</span></summary>
+          <ol>
+          {sections.map((s) => (
+            <li class={`depth-${s.depth - topDepth}`}><a href={`#${s.slug}`} data-target={s.slug}>{s.text}</a></li>
+          ))}
+          </ol>
+        </details>
+      </nav>
+    )}
+
+    <div class="article-body">
       <Content />
     </div>
 
-    <div class="back-to-home">
+    <footer class="article-footer">
+      {entry.data.tags && entry.data.tags.length > 0 && (
+        <ul class="tags" aria-label="Tags">
+          {entry.data.tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      )}
+      <aside class="author" aria-label="About the author">
+        <p class="author-name">Chegne Eu Joe</p>
+        <p class="author-bio">Offensive security professional and aspiring AI safety researcher.</p>
+        <a class="author-link" href="https://github.com/chaoticcooties" rel="me">GitHub</a>
+      </aside>
+      <nav class="post-nav" aria-label="More research">
+        {older && (
+          <a class="post-nav-link" href={`/blog/${older.slug}`} rel="prev">
+            <span class="post-nav-label">Previous</span>
+            <span class="post-nav-title">{older.title}</span>
+          </a>
+        )}
+        {newer && (
+          <a class="post-nav-link post-nav-link--next" href={`/blog/${newer.slug}`} rel="next">
+            <span class="post-nav-label">Next</span>
+            <span class="post-nav-title">{newer.title}</span>
+          </a>
+        )}
+      </nav>
       <a href="/" class="back-link">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Back to Research
+        All research
       </a>
-    </div>
+    </footer>
   </article>
 </BaseLayout>
 
 <style>
-  .blog-post {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
+  /*
+    Distill-style column system: text column centered,
+    figures break out to the wide column.
+  */
+  .article {
+    --side: calc((var(--wide) - var(--measure)) / 2);
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(var(--gutter), 1fr)
+      [wide-start] minmax(0, var(--side))
+      [text-start] min(var(--measure), calc(100% - var(--gutter) * 2))
+      [text-end] minmax(0, var(--side))
+      [wide-end] minmax(var(--gutter), 1fr)
+      [full-end];
   }
 
-  .post-header {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--color-border);
+  .article > *,
+  .article-body > :global(*) {
+    grid-column: text;
+    min-width: 0;
   }
 
-  .post-meta {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
+  .article > .article-body {
+    display: grid;
+    grid-column: full;
+    grid-template-columns: subgrid;
   }
 
-  .category {
-    display: inline-block;
-    padding: 0.35rem 0.875rem;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  /* Header */
+  /* Header spans the page on a contour strip that fades into the text. */
+  .article > .article-header {
+    grid-column: full;
+    display: grid;
+    grid-template-columns: subgrid;
+    position: relative;
+    padding-block: clamp(3rem, 2rem + 5vw, 6rem) 0;
+    --contour-opacity: 0.45;
   }
 
-  time {
-    color: var(--color-text-muted);
+  .article-header > * {
+    grid-column: text;
   }
 
-  .blog-post h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    line-height: 1.1;
-  }
-
-  .post-description {
-    font-size: 1.125rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-  }
-
-  .tag {
-    padding: 0.25rem 0.75rem;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    font-weight: 500;
-  }
-
-  .post-content {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  .post-content :global(h2) {
-    margin-top: 2.5rem;
+  .article-header h1 {
     margin-bottom: 1.25rem;
-    padding-top: 0.5rem;
   }
 
-  .post-content :global(h3) {
+  .standfirst {
+    font-size: clamp(1.1875rem, 1.05rem + 0.55vw, 1.4375rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+  }
+
+  .byline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(7rem, 100%), max-content));
+    justify-content: start;
+    gap: 1rem 2rem;
+    margin-top: 2.5rem;
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--rule);
+    font-family: var(--font-ui);
+  }
+
+  .byline dt {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    margin-bottom: 0.2rem;
+  }
+
+  .byline dd {
+    font-size: 0.9375rem;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Contents rail: inline block on small screens, fixed rail on wide screens. */
+  .contents {
+    grid-column: text;
     margin-top: 2rem;
-    margin-bottom: 0.875rem;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    line-height: 1.45;
   }
 
-  .post-content :global(p) {
-    margin-bottom: 1.125rem;
+  .contents-details > summary {
+    list-style: none;
+    cursor: pointer;
   }
 
-  .post-content :global(ul),
-  .post-content :global(ol) {
-    margin-bottom: 1.5rem;
-    padding-left: 2rem;
+  .contents-details > summary::-webkit-details-marker {
+    display: none;
   }
 
-  .post-content :global(li) {
+  .contents-count {
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+
+  .contents.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .contents-title {
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.625rem;
+  }
+
+  .contents ol {
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .contents a {
+    display: block;
+    color: var(--ink-3);
+    text-decoration: none;
+    padding-left: 0.875rem;
+    border-left: 1px solid var(--rule);
+    transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+  }
+
+  .contents a:hover {
+    color: var(--ink);
+  }
+
+  .contents a.active {
+    color: var(--ink);
+    border-left-color: var(--accent);
+  }
+
+  .contents .depth-1 a { padding-left: 1.625rem; }
+  .contents .depth-2 a { padding-left: 2.375rem; font-size: 0.8125rem; }
+
+  @media (max-width: 1439px) {
+    .contents {
+      padding: 1.25rem 1.5rem;
+      background: var(--panel);
+      border-radius: 12px;
+    }
+
+    .contents a {
+      padding-left: 0;
+      border-left: 0;
+      padding-block: 0.3rem;
+    }
+
+    .contents .depth-1 a { padding-left: 1rem; }
+    .contents .depth-2 a { padding-left: 2rem; }
+
+    .contents-details > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+
+    .contents-details > summary::after {
+      content: '';
+      width: 0.5rem;
+      height: 0.5rem;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+      transition: transform 0.2s var(--ease-out);
+    }
+
+    .contents-details[open] > summary::after {
+      transform: rotate(-135deg);
+    }
+  }
+
+  /* Wide screens: the rail floats in the left margin, like a side index. */
+  @media (min-width: 1440px) {
+    /* Aligns with the header logo, and never reaches under wide figures. */
+    .contents {
+      position: fixed;
+      top: 6.5rem;
+      left: min(calc(50% - var(--page) / 2), calc(50% - var(--wide) / 2 - 13rem));
+      z-index: 2;
+      width: 12rem;
+      margin-top: 0;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+      transition: opacity 0.2s var(--ease-out);
+    }
+
+    .contents-details > summary {
+      pointer-events: none;
+    }
+  }
+
+  /* Between 1440 and 1679px, narrow the figure column so the rail fits beside it. */
+  @media (min-width: 1440px) and (max-width: 1679px) {
+    .article {
+      --wide: 50rem;
+    }
+  }
+
+  /* Body */
+  .article-body {
+    margin-top: 3rem;
+  }
+
+  .article-body :global(p),
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    margin-bottom: 1.35rem;
+  }
+
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    padding-left: 1.4rem;
+  }
+
+  .article-body :global(li) {
+    margin-bottom: 0.45rem;
+    padding-left: 0.2rem;
+  }
+
+  .article-body :global(li::marker) {
+    color: var(--ink-3);
+  }
+
+  .article-body :global(h2) {
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .article-body :global(h3) {
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .article-body :global(h4) {
+    font-size: 1.0625rem;
+    margin-top: 2rem;
     margin-bottom: 0.5rem;
   }
 
-  .post-content :global(blockquote) {
-    border-left: 4px solid var(--color-primary);
-    padding-left: 1.5rem;
+  .article-body :global(strong) {
+    font-weight: 600;
+  }
+
+  .article-body :global(a) {
+    text-decoration-color: var(--accent);
+  }
+
+  .article-body :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 3rem 0;
+  }
+
+  .article-body :global(blockquote) {
     margin: 2rem 0;
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--rule-strong);
+    color: var(--ink-2);
+  }
+
+  .article-body :global(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Figures break out to the wide column on soft panels. */
+  /* Figures: numbered, captioned, breaking out to the wide column. */
+  .article > .article-body {
+    counter-reset: figure;
+  }
+
+  .article-body > :global(:is(.diagram, img, p:has(> img:only-child), table)) {
+    grid-column: wide;
+    margin: 1.5rem 0 2.75rem;
+  }
+
+  .article-body > :global(.diagram) {
+    counter-increment: figure;
+  }
+
+  .article-body :global(.diagram-scroll) {
+    overflow-x: auto;
+  }
+
+  .article-body :global(.diagram svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .article-body :global(.diagram figcaption) {
+    max-width: var(--measure);
+    margin: 1rem auto 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  .article-body :global(.diagram figcaption::before) {
+    content: 'Figure ' counter(figure) '. ';
+    font-family: var(--font-display);
     font-style: italic;
-    color: var(--color-text-muted);
+    color: var(--accent);
   }
 
-  .post-content :global(code) {
-    font-size: 0.9em;
+  .article-body :global(.figure-title) {
+    font-weight: 600;
+    color: var(--ink);
   }
 
-  .post-content :global(pre) {
-    margin: 2rem 0;
-    background: #FFF5ED !important;
-    border: 1px solid #FFE4D1 !important;
+  .article-body :global(.lead-image) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
   }
 
-  .post-content :global(pre code) {
-    color: var(--color-text) !important;
+  .article-body :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
   }
 
-  /* Override syntax highlighter */
-  .post-content :global(pre code span) {
-    background: none !important;
+  .article-body :global(pre) {
+    margin: 0.5rem 0 2rem;
   }
 
-  .post-content :global(.astro-code),
-  .post-content :global(.shiki) {
-    background: #FFF5ED !important;
-    border: 1px solid #FFE4D1 !important;
+  .article-body :global(table) {
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    line-height: 1.5;
   }
 
-  .back-to-home {
+  .article-body :global(th),
+  .article-body :global(td) {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.625rem 1.25rem 0.625rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .article-body :global(th) {
+    font-weight: 600;
+    border-bottom-color: var(--rule-strong);
+  }
+
+  .article-body :global(.katex-display) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.25rem;
+  }
+
+  /* Footer */
+  .article-footer {
     margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-border);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+  }
+
+  .tags li {
+    padding: 0.2rem 0.625rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--ink-2);
+  }
+
+  .author {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    padding: 1.25rem 0;
+    margin-bottom: 1rem;
+    border-block: 1px solid var(--rule);
+  }
+
+  .author-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.125rem;
+  }
+
+  .author-bio {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+
+  .author-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .post-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-nav-link {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: var(--paper);
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease-out);
+  }
+
+  .post-nav-link:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  .post-nav-link--next {
+    grid-column: 2;
+    text-align: right;
+  }
+
+  .post-nav-label {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+
+  .post-nav-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+
+  .article-body :global(.heading-anchor) {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-left: 0.4rem;
+    color: var(--ink-3);
+    opacity: 0;
+    transition: opacity 0.2s var(--ease-out);
+  }
+
+  .article-body :global(:is(h2, h3, h4):hover .heading-anchor),
+  .article-body :global(.heading-anchor:focus-visible) {
+    opacity: 1;
   }
 
   .back-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--color-text-muted);
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
+    gap: 0.4rem;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    text-decoration: none;
   }
 
-  .back-link:hover {
-    color: var(--color-primary);
-    transform: translateX(-4px);
-  }
-
-  .back-link svg {
-    transition: transform 0.2s ease;
-  }
-
-  .back-link:hover svg {
-    transform: translateX(-2px);
-  }
-
-  @media (max-width: 768px) {
-    .blog-post {
-      padding: 2rem 1.5rem;
+  @media (max-width: 640px) {
+    .post-nav {
+      grid-template-columns: 1fr;
     }
 
-    .blog-post h1 {
-      font-size: 2rem;
+    .post-nav-link--next {
+      grid-column: 1;
     }
 
-    .post-description {
-      font-size: 1.0625rem;
+    /* Diagrams render at their native scale and scroll sideways inside the text column. */
+    .article-body > :global(.diagram) {
+      grid-column: text;
     }
 
-    .post-content {
-      font-size: 0.9375rem;
+    .article-body :global(.diagram svg) {
+      width: var(--diagram-width, 720px);
+      max-width: none;
+    }
+
+    .article-body :global(.fuzzyboundary-diagram) { --diagram-width: 960px; }
+    .article-body :global(.context-differential) { --diagram-width: 900px; }
+    .article-body :global(.dual-llm) { --diagram-width: 880px; }
+    .article-body :global(.languageambiguity-diagram) { --diagram-width: 900px; }
+    .article-body :global(.architecture-benchmark) { --diagram-width: 780px; }
+
+    .article-body :global(.diagram-scroll::after) {
+      content: 'Scroll sideways to see the full figure';
+      position: sticky;
+      left: 0;
+      display: block;
+      margin-top: 0.5rem;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.875rem;
+      color: var(--ink-3);
+    }
+
+    .article-body :global(.diagram figcaption) {
+      margin-top: 0.75rem;
+    }
+
+    .author {
+      grid-template-columns: 1fr;
+    }
+
+    .byline {
+      gap: 1rem 2rem;
     }
   }
 </style>
+
+<script>
+  // Add a shareable link to every section heading.
+  const LINK_ICON = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 4.5l1-1a2.8 2.8 0 014 4l-1 1M9 11.5l-1 1a2.8 2.8 0 01-4-4l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  document.querySelectorAll<HTMLElement>('.article-body :is(h2, h3, h4)[id]').forEach((heading) => {
+    const anchor = document.createElement('a');
+    anchor.className = 'heading-anchor';
+    anchor.href = `#${heading.id}`;
+    anchor.setAttribute('aria-label', `Link to section: ${heading.textContent?.trim() ?? ''}`);
+    anchor.innerHTML = LINK_ICON;
+    heading.appendChild(anchor);
+  });
+
+  // Contents rail: mark the section being read, hide near the footer,
+  // and start collapsed on narrow screens.
+  const contents = document.querySelector<HTMLElement>('.contents');
+  const details = document.querySelector<HTMLDetailsElement>('.contents-details');
+  const wide = window.matchMedia('(min-width: 1440px)');
+
+  if (details) {
+    const syncOpen = () => { details.open = wide.matches; };
+    syncOpen();
+    wide.addEventListener('change', syncOpen);
+  }
+
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.contents a[data-target]')];
+  const headings = links
+    .map((link) => document.getElementById(link.dataset.target ?? ''))
+    .filter((h): h is HTMLElement => h !== null);
+
+  if (links.length > 0 && headings.length > 0) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const line = window.innerHeight * 0.3;
+      let current = headings[0];
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top <= line) current = heading;
+        else break;
+      }
+      links.forEach((link) => link.classList.toggle('active', link.dataset.target === current.id));
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('hashchange', update);
+  }
+
+  const footer = document.querySelector('.site-footer');
+  if (contents && footer) {
+    new IntersectionObserver(([entry]) => {
+      contents.classList.toggle('is-hidden', entry.isIntersecting && wide.matches);
+    }).observe(footer);
+  }
+</script>
