@@ -1,0 +1,116 @@
+<!doctype html>
+<!--
+  Social share card template (1200x630), shared by cooties.io and umbra.cooties.io.
+  Render with scripts/og/render-og.mjs. Select a card with ?card=blog or ?card=umbra.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,500;1,7..72,400&display=block">
+<style>
+  :root {
+    --bg: #F1F4EC;
+    --ink: #1C2B21;
+    --ink-2: #435347;
+    --contour: #8FAE8C;
+    --accent: #36704D;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .11 0 0 0 0 .17 0 0 0 0 .13 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  body.umbra { --accent: #101112; --mark: #101112; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative;
+    background: var(--grain), var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Contour field, fading out toward the text column. */
+  .field {
+    position: absolute;
+    inset: 0;
+    background: var(--contour);
+    opacity: 0.7;
+    -webkit-mask:
+      url('../../public/textures/contours-statement.svg') center / cover no-repeat,
+      linear-gradient(90deg, transparent 38%, #000 75%);
+    -webkit-mask-composite: source-in;
+  }
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 72px 80px 64px;
+    max-width: 800px;
+  }
+  .mark { width: 104px; height: 104px; margin-left: -8px; }
+  .mark--umbra {
+    width: 112px;
+    height: 106px;
+    margin-left: 0;
+    background: var(--mark);
+    -webkit-mask: url('umbra-mark.png') center / contain no-repeat;
+  }
+  h1 {
+    margin-top: auto;
+    font-family: 'Literata', Georgia, serif;
+    font-weight: 500;
+    font-variation-settings: 'opsz' 24;
+    font-size: 88px;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+  .subtitle {
+    margin-top: 22px;
+    font-size: 32px;
+    line-height: 1.3;
+    color: var(--ink-2);
+    max-width: 22em;
+  }
+  .domain {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 44px;
+    font-family: 'Literata', Georgia, serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--ink-2);
+  }
+  .domain::before {
+    content: '';
+    width: 56px;
+    height: 3px;
+    background: var(--accent);
+  }
+</style>
+</head>
+<body>
+  <div class="field"></div>
+  <main class="card" id="card"></main>
+  <script>
+    const ROBOT = `<svg class="mark" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(8, 12) scale(1)"><g stroke="#5B3320" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="62" y="112" width="22" height="60" rx="6" fill="#B6AAA0"/><rect x="172" y="112" width="22" height="60" rx="6" fill="#B6AAA0"/><rect x="62" y="90" width="132" height="110" rx="24" fill="#FCEFD9"/><rect x="82" y="110" width="92" height="72" rx="18" fill="#F9E6CF"/><rect x="96" y="190" width="64" height="20" rx="6" fill="#FCEFD9"/></g><g fill="#5B3320"><circle cx="112" cy="138" r="4"/><circle cx="144" cy="138" r="4"/></g><path d="M112 150 C118 158, 138 158, 144 150" fill="none" stroke="#5B3320" stroke-width="4" stroke-linecap="round"/></g></svg>`;
+    const CARDS = {
+      blog: {
+        mark: ROBOT,
+        title: 'Cooties@Blog',
+        subtitle: 'Hands-on research in AI safety and cybersecurity.',
+        domain: 'cooties.io',
+      },
+      umbra: {
+        mark: '<div class="mark mark--umbra" aria-hidden="true"></div>',
+        title: 'Project Umbra',
+        subtitle: 'Disclosure ledger: vulnerabilities found, reported, and disclosed.',
+        domain: 'umbra.cooties.io',
+      },
+    };
+    const key = new URLSearchParams(location.search).get('card') || 'blog';
+    const c = CARDS[key];
+    document.body.classList.add(key);
+    document.getElementById('card').innerHTML =
+      `${c.mark}<h1>${c.title}</h1><p class="subtitle">${c.subtitle}</p><p class="domain">${c.domain}</p>`;
+  </script>
+</body>
+</html>

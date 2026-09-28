@@ -10,8 +10,11 @@ draft: false
 import ArchitectureBenchmark from '../../components/ArchitectureBenchmark.astro';
 import { Image } from 'astro:assets';
 import umbraLogo from '../../assets/project-umbra-logo.png';
+import SiteNote from '../../components/SiteNote.astro';
 
 <Image src={umbraLogo} alt="Project Umbra logo: a stylized eye inside a shield" widths={[640, 960, 1536]} sizes="(max-width: 1000px) 100vw, 960px" class="lead-image" loading="eager" />
+
+<SiteNote label="Disclosure ledger" text="Vulnerabilities from this project, found, reported, and disclosed:" href="https://umbra.cooties.io" linkText="umbra.cooties.io" />
 
 Project Umbra is a personal experiment in using agentic LLM systems for software supply chain vulnerability detection. The motivation is straightforward: the standard defensive posture for supply chain risk today is version pinning, lock files, and SCA tools that match dependency versions against known CVE databases. This catches packages with *disclosed* vulnerabilities. It does nothing about the package that was acquired last month by a new maintainer who inserted a backdoor into a routine update. That package has no CVE. Its version number is clean. It passes every check.
 

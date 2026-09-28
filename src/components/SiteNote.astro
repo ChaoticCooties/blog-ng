@@ -1,0 +1,77 @@
+---
+// A ruled note that points readers to a related site (for example, a project's ledger).
+interface Props {
+  label: string;
+  text: string;
+  href: string;
+  linkText: string;
+}
+
+const { label, text, href, linkText } = Astro.props;
+---
+
+<aside class="site-note">
+  <p class="site-note-label">{label}</p>
+  <p class="site-note-body">
+    {text}
+    <a class="site-note-link" href={href}>
+      <span>{linkText}<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+  </p>
+</aside>
+
+<style>
+  .site-note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 0.25rem 1.25rem;
+    margin: 0 0 2.25rem;
+    padding: 1rem 0;
+    border-block: 1px solid var(--rule);
+  }
+
+  .site-note-label {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.0625rem;
+    color: var(--ink-3);
+  }
+
+  .site-note-body {
+    margin: 0;
+    color: var(--ink-2);
+  }
+
+  .site-note-link {
+    display: inline-block;
+    margin-left: 0.25rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .site-note-link span {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    text-underline-offset: 0.2em;
+  }
+
+  .site-note-link svg {
+    display: inline-block;
+    vertical-align: -0.1em;
+    margin-left: 0.3rem;
+    transition: transform 0.2s var(--ease-out);
+  }
+
+  .site-note-link:hover svg {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 640px) {
+    .site-note {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
