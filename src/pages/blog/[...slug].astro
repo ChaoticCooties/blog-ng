@@ -92,11 +92,6 @@ const published = entry.data.date.toLocaleDateString('en-US', {
           {entry.data.tags.map((tag) => <li>{tag}</li>)}
         </ul>
       )}
-      <aside class="author" aria-label="About the author">
-        <p class="author-name">Chegne Eu Joe</p>
-        <p class="author-bio">Offensive security professional and aspiring AI safety researcher.</p>
-        <a class="author-link" href="https://github.com/chaoticcooties" rel="me">GitHub</a>
-      </aside>
       <nav class="post-nav" aria-label="More research">
         {older && (
           <a class="post-nav-link" href={`/blog/${older.slug}`} rel="prev">
@@ -512,37 +507,9 @@ const published = entry.data.date.toLocaleDateString('en-US', {
     color: var(--ink-2);
   }
 
-  .author {
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: baseline;
-    gap: 0.25rem 1rem;
-    padding: 1.25rem 0;
-    margin-bottom: 1rem;
-    border-block: 1px solid var(--rule);
-  }
 
-  .author-name {
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 1.125rem;
-  }
 
-  .author-bio {
-    color: var(--ink-2);
-    font-size: 0.9375rem;
-  }
 
-  .author-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-family: var(--font-ui);
-    font-weight: 500;
-    color: var(--accent);
-    text-decoration: none;
-  }
 
   .post-nav {
     display: grid;
@@ -652,9 +619,6 @@ const published = entry.data.date.toLocaleDateString('en-US', {
       margin-top: 0.75rem;
     }
 
-    .author {
-      grid-template-columns: 1fr;
-    }
 
     .byline {
       gap: 1rem 2rem;
