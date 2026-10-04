@@ -1,0 +1,204 @@
+---
+title: 'Anatomy of a Jailbreak'
+description: 'A meta-analysis of jailbreak tactics and the role of context in multi-turn attacks.'
+date: 2026-10-02
+category: 'AI safety'
+tags: ['jailbreaks', 'llm', 'ai-safety', 'redteam', 'interpretability']
+draft: true
+---
+
+import Ref from '../../components/Ref.astro'
+import References from '../../components/References.astro'
+import TacticSweep from '../../components/TacticSweep.astro'
+import PopularityEfficacy from '../../components/PopularityEfficacy.astro'
+import ArtifactPermission from '../../components/ArtifactPermission.astro'
+import DeterminacyLadder from '../../components/DeterminacyLadder.astro'
+import RecencyDose from '../../components/RecencyDose.astro'
+import InjectRemove from '../../components/InjectRemove.astro'
+import FirstRefusal from '../../components/FirstRefusal.astro'
+import TacticAfterRefusal from '../../components/TacticAfterRefusal.astro'
+import CompletionContrast from '../../components/CompletionContrast.astro'
+import WrappedControl from '../../components/WrappedControl.astro'
+import Components from '../../components/Components.astro'
+
+AI red teaming has evolved a lot since the early days. Prompts like 'ignore previous instructions', which once worked on frontier models, are now overshadowed by large agentic swarm jailbreaks such as TRACE<Ref id="trace" /> and Boundary Point Jailbreaking<Ref id="boundarypoint" />. Even so, manual red teaming is still a very useful skill against AI-integrated applications and for designing similar infra. In this blog post, we look at several attack strategies on older models. We test them against a meta-analysis of existing papers and run some interpretability experiments to see which approaches work and which don't.
+
+> This isn’t a full survey of the field and rather a collection of field notes from side experiments. Most experiments use `Llama-3.1-8b-Instruct`, and `Qwen2.5-7B-Instruct` is used as a backup to replicate some of the interpretability findings.
+
+## Tactics
+
+We first need to define what a tactic is carefully to study them effectively due to confounders.
+Every tactic here is one sentence wrapped around a request that never changes:
+
+<WrappedControl />
+
+That control is what most published tactic numbers lack. Applying a tactic usually means asking a model to rewrite the request into the frame, so the reported effect mixes "this framing works" with "this rewording works".
+
+With no wrapper at all, the model refuses 92.0% of the time. A tactic worth 8.7 points takes that down to 83.3%. A handful move it the other way, and where that happens the text says refusal went up.
+
+In the WildTeaming<Ref id="wildteaming" /> corpus, the strongest tactic in the sweep appears three times. The most popular appears 14,089 times and does a third as much:
+
+<PopularityEfficacy />
+
+One popular tactic backfires outright. `exaggeration` pushes refusal up rather than down, and fake authority, urgency and mock jailbreak headers lean the same way.
+
+<TacticSweep />
+
+It is imperative to note that there are many similar datasets in the wild and WildTeaming is not the only one. We choose not to pool them since they are not directly comparable due to varying models, years, and definitions of success. However, the pattern of popular tactics not being the most effective is consistent across these datasets.
+
+In terms of relative literature, Guarding the Guardrails<Ref id="guardrails" /> annotated 1,364 dialogues from a structured red-teaming challenge. In it, 48 people attacked Minerva-7B-instruct, an Italian model. Their most-used family, Impersonation & Fictional Scenarios, appears in 696 dialogues and works 15.1% of the time. Their best family, Automatic Attacks, appears in 51 and works 23.5%.
+
+Similarly, Liu et al.<Ref id="liu" /> sorted 78 real jailbreak prompts into ten patterns. They scored them against GPT-3.5-Turbo in 2023. Character Role Play accounts for 70 of the 78 and succeeds 87.4% of the time. The best pattern scores 93.5%, from just two prompts.
+
+### What separates the tactics that work
+
+We then attempt to cluster the tactics by what they do to the request. Tactics that change what kind of thing the answer is nearly all clear threshold. Tactics that argue the model should comply never do.
+
+We define the first group as "artifact tactics". They ask for a transcript, a screenplay, an incident report or a news dispatch. Second group is defined as "permission tactics". They claim a court order, a supervisor's approval, a professional licence or simply just apply pressure to the model.
+
+<ArtifactPermission />
+
+Human red-team data points the same way from a completely different direction. Giarrusso's second most-used family<Ref id="guardrails" /> is Persuasion, across 250 dialogues. It works 14.4% of the time, which is below the middle of their own table. Arguing with the model is the most popular thing red teamers do, and one of the least effective.
+
+### Framing fit 
+One may think to just use the highest rated framing against all adversarial requests. However there is a catch, take the recipe artifact for example: Asking for a recipe moves refusal 5 points in the wrong direction. This is because a recipe simply has nothing to do with the requests it was applied to. Generic artifact frames like "a report" or "an account" give 16 and 8 points in the right direction. But pair a narrow frame with the harm category it belongs to, and it works.
+
+A penetration-test report is worth 20 points on intrusion requests and 0.6 points on everything else. A news article is worth 23.5 points on misinformation and 4.2 points elsewhere. The frame isn't strong or weak in itself. It’s strong when it’s a plausible container for the thing being asked.
+
+The practical takeaway here is to select a frame in which the answer you want would most plausibly appear. 
+
+That's the logic for frames that describe what the output is. A second kind of instruction ignores content entirely and only dictates how the output looks, and it doesn't need to fit anything.
+
+### Completion drive
+
+Interestingly enough, using `style_guidelines` ("use numbered headings, a formal register and a summary table") lowers refusal by 25.7 points. Similarly, a second-person style constraint lowers refusal by 11 points. 
+These tactics only dictate formatting, and none of them mention the actual request.
+
+<CompletionContrast />
+
+Existing literature calls this competing objectives<Ref id="competing" />. What the controlled setup adds is that the tactic never touches the request. It hands the model a job, and finishing the job wins.
+
+If handing the model a task is what works, the obvious next move is to hand it more of one. We built a ladder of increasingly specific completions. The idea is that the more of the answer you specify, the more the model has to produce, and the less it can refuse.
+
+That fails. How it fails is the most interesting result here.
+
+- Say nothing.
+- "Be organized": worth 7.7 points.
+- Name one piece of structure: 12.5 points.
+- Name two: 17.5 points.
+- Hand over a full template with blanks to fill in: it drops to 2.5.
+
+Compliance climbs, peaks at two pieces of structure, then falls off a cliff. To ensure that there are no prompt length confounds, the prompt was padded to the same length without specifying anything.
+
+<DeterminacyLadder />
+
+The reason is that spelling out the answer spells out the request. Some refusals name the task outright, such as "I can't provide instructions on how to make X" instead of a generic no. These climb from 40% to 58% to 72% as you go up the ladder. Writing out "Materials required: … Procedure, step 1: …" makes the harmful part impossible to miss. At the top rung the model isn't confused about the task. It understands the task better, and refuses more pointedly.
+
+So the completion drive is a lever with a peak. You can't simply crank up the helpful side of the helpfulness-versus-safety tradeoff. Whatever you add to crank it also exposes what you are asking for.
+
+## Context
+
+So far we have looked at single-turn injections. However most realistic attack scenarios happen in multi-turn scenarios, and hence we need to understand how context affects the model's behaviour. We ran a series of experiments to see how the model's previous refusals affect its future responses.
+
+For this section, an archive of 909 complete six-turn adversarial dialogues was used against the same model. We attempt to modify refusals in the dialogue (e.g., insert, delete or move a refusal in a conversation). Then we re-run the final turn. This follows Turn Surgery<Ref id="turnsurgery" />, and it’s what separates causes from correlations here.
+
+We find that when a refusal is present in the dialogue, it has a strong effect on the model's future refusals. The effect is asymmetric. Deleting a refusal from the transcript does not undo its influence. Inserting a refusal into a clean transcript has a much stronger effect than deleting one.
+
+<InjectRemove />
+
+To ensure that the effect is not due to editing the transcript, we swapped a refusal for a different refusal, in the same position and with the same length. That moves refusal by half a point. The obvious challenge measuring in this scenario is that our replacement replies may come from unrelated dialogues, which makes the edited transcripts incoherent and could understate removal. Hence we ensure that we restricted replacements to dialogues pursuing the same goal. We find that removal stays unchanged and injection gets stronger (22 to 40.5 points).
+
+### Quantity vs recency
+
+The next thing we investigate is whether if a prior refusal matters, does it matter more when there are more of them, or when they’re closer to the end.
+
+Recency and count look like the same thing until intervention is done. We find that moving a refusal closer to the end of the conversation has a much stronger effect than adding more refusals earlier in the conversation. The effect is not linear, and it saturates after one refusal. 
+
+<RecencyDose />
+
+The effect is already known as Refusal inertia<Ref id="inertia" />, measured on DeepSeek-Chat. It describes a model's first refusal carrying through later turns "to maintain contextual consistency". They build a framework that wipes the model's memory each turn to remove it. Once they do, simple attacks hit 96%.
+
+But interesting enough, the Cold-Start Safety Gap in LLM Agents<Ref id="coldstart" /> reaches a different conclusion about count, and it specifies our model directly. They prefill *D* refusal demonstrations into an agent's history. Then they measure how often it wrongly refuses legitimate tasks. On Llama-3.1-8B, over-refusal accumulates with D rather than saturating.
+
+This is assumed to be a difference in experiment design, although further work is needed to confirm. The differences are: 
+- Demonstrations are written refusals prefilled back to back. Ours are real refusals the same model produced. They sit inside a natural dialogue, with ordinary turns between them.
+- Outcome is refusal of benign tasks, starting near zero. Ours is refusal of the same harmful request, already sitting at 30%.
+- It was measured on an agent invoking tools, while ours was a chat interface. That could matter if the model's internal state is different in the two cases.
+- Their own curve flattens hard after ten demonstrations, so part of what they measure is saturation.
+
+It’s tempting to read the recency result as the model forgetting earlier turns. But we need to be careful about what that means. When attention closes<Ref id="attentioncloses" /> finds that goal-defining tokens lose attention as a conversation grows, while still persisting in the model's internal representations. The influence of a refusal fades with distance, but deleting the text from the transcript doesn't remove it, because by then it isn't only in the text. State-dependent safety failures<Ref id="statedependent" />, on Llama-3, reports the same self-reinforcing dynamic from the other end.
+
+### Sunken costs
+
+The common intuition about multi-turn attacks is that the model grows warier as the conversation goes on. The idea is that it starts noticing a pattern and refuses more often, but that is not the case.
+
+To test this, we pool every turn where nothing has been refused yet and measure how often a first refusal occurs on that turn. We find that the rate stays flat across all six turns, and that turn index predicts a first refusal at chance.
+
+<FirstRefusal />
+
+Meanwhile the share of dialogues that have refused at least once climbs steadily. So a long conversation isn't harder on the attacker because the model is getting warier. It’s harder because there are more chances to trip the same constant risk, and tripping it once is close to permanent.
+
+### Refusal flavour
+
+The kind of refusal changes as a conversation goes on, so we split refusals by type across the six turns. We find that hard refusals climb steadily from 8.1% in turn 1 to 22.9% in turn 6, and capability denials, such as "I don't have that information", run backwards from 3.3% in turn 1 down to 0.8% in turn 6.
+
+Early on the model pleads ignorance, but by turn 6 it says it won't, so inability gives way to unwillingness as the context fills in. This could be a real shift in stance, although it is also possible that turn-1 messages are vaguer and genuinely harder to answer.
+
+We find a third response type that is neither a refusal nor compliance, which we define as deflection. We scored 319 attack candidates with a harm classifier and found that 247 scored zero, meaning the attacks delivered no harm. Of these, 222 never refused at all and instead used helpful-sounding openings like "I'd be happy to," so they appear to comply while only answering adjacent, harmless questions.
+
+### Combining both
+We take a bare harmful request and wrap it in a tactic from the first half. We score it in three ways:
+
+- alone at turn 1,
+- at turn 4 of a real dialogue that contains no refusals,
+- at turn 4 of a dialogue that has already refused once.
+
+<TacticAfterRefusal />
+
+We find that all five tactics survive the conversation, although none of them survive a refusal. Three of the tactics remain within one point of their original score between the first two columns, and one tactic is actually stronger in context than when it is alone. In the third column, every tactic lands within 2.5 points of zero.
+
+Hence, the practical consequence is simple. If the model has refused once, stop editing your prompt because the lever you are trying to use is already disconnected, just start a new session.
+
+## A look at the activations
+We took the activations at the final prompt token of all 909 dialogues, before a single reply token exists, and decomposed them. Three axes come out with a readable meaning. It is imperative to note that this ranks directions by how much variance they explain and not by how much they matter, so "the biggest axis" and "the important axis" are different questions.
+
+<Components />
+
+**The first axis is the outcome itself.** It correlates with whether the reply contains a refusal at +0.594, and it reproduces at three different depths in the network, at +0.600, +0.594 and +0.607. Remember this is read at the last token of the prompt. Whatever the model is going to do, a good deal of it is already visible before it writes anything. It isn't reply length in disguise either: word count correlates −0.072.
+
+**The second axis is the attacker's register**, meaning how polite or formal or pleading the attacker sounds. Rewriting an attack's register while holding its content fixed moves this axis by **0.73 standard deviations**, against 0.18 for a matched control, so the manipulation lands. Compliance moves by **less than 0.05** on a harm score. Detecting the gap we actually observed would need about 2,400 dialogues, which is out of scope for this small blog post.
+
+So a direction can move a great deal and not reach behaviour at all. That is worth holding onto when reading any result of the form "we found a direction for X".
+
+**The third axis is whether the model is writing a document or having a conversation.** It tracks headers at −0.462 and newlines at −0.341, with the refusal axis and reply length controlled. It is absent at turn 1 and present at turn 6, and that gap survives matching the two turns for refusal rate. It also replicates in Qwen, on Qwen's own generations at the equivalent depth: −0.383 and −0.406.
+
+That last one rhymes with the strongest tactic in the post, which works by asking for headings and a summary table. The tempting conclusion is that the formatting tactic works by pushing the model along this axis. We never tested that, and the honest version is that the two findings point the same way without one explaining the other.
+
+### Where this could go
+
+We recognise that our second component result is not unique. Linear decodability does not prove causal relevance, and the residual stream can hold representations that downstream layers do not use. One study<Ref id="decodable" /> decodes a failure signal at 71.6% balanced accuracy and then finds that five families of linear steering produce no behavioural correction, and another<Ref id="steeringcontrol" /> reports the same readable-but-not-steerable split across several safety concepts. 
+
+In terms of next steps, ablating the third component would allow us to test whether the formatting tactic loses its effect. If it does, then the geometry explains the attack, but if it does not, the two findings are unrelated and we should stop implying a connection.
+
+## What this misses about current frontier models
+
+Every number in this post represents a refusal rate measured on an 8B open-weight model that was trained to refuse. We note that frontier labs are moving away from this approach in three ways.
+
+Safe completions<Ref id="safecompletions" /> train the model to redirect or partly answer instead of declining, so refusal is no longer a binary event. A behaviour audit of 21 open-weight models<Ref id="tradeoff" /> finds partial compliance in 15.8% of responses, which our first-sentence measure cannot detect. Constitutional classifiers<Ref id="classifiers" /> move the decision outside the model, so a wrapper that exploits the weights never reaches the model itself. Deliberative alignment<Ref id="deliberative" /> makes the model reason over a safety policy before it answers.
+
+Our results are split on these developments. We expect permission framing to continue failing, because it argues with a prompt about a judgement that output-centric training made over completions. We expect artifact framing to weaken, because it changes the form of the answer and output-centric scoring judges the content.
+
+## Limitations
+
+- The multi-turn results apply to Llama only, although the framing results replicated on Qwen.
+- We used two 7-8B instruct models and greedy decoding.
+- The 909 dialogues were generated by search against this victim, so they are attacks that have already worked here.
+- Refusal is scored by pattern matching, which collapses hard refusal, deflection and partial compliance into one bit.
+- Harm scores are lower bounds, because 40-48% of the strongest arms truncate at 384 tokens.
+- Quote family means rather than individual tactic numbers, since the largest effects vary most between the two phrasings we used per tactic.
+- These numbers describe one model at one moment. Safety behaviour changes, and published results come from whatever model the authors had at the time, which is why every outside result here names the model it was measured on.
+- The frontier predictions above are untested.
+
+## References
+
+<References />

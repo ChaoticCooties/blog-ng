@@ -6,9 +6,10 @@ interface Props {
   slug: string;
   category?: string;
   featured?: boolean;
+  draft?: boolean;
 }
 
-const { title, date, description, slug, category = 'Research', featured = false } = Astro.props;
+const { title, date, description, slug, category = 'Research', featured = false, draft = false } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -24,6 +25,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
   </h2>
   <p class="post-description">{description}</p>
   <p class="post-meta">
+    {draft && <span class="tag-pill draft-pill">Draft</span>}
     <span class="tag-pill">{category}</span>
     <time datetime={date.toISOString()}>{formattedDate}</time>
   </p>
@@ -72,6 +74,12 @@ const formattedDate = date.toLocaleDateString('en-US', {
     color: var(--ink-2);
     font-size: 1.0625rem;
     max-width: 58ch;
+  }
+
+  .draft-pill {
+    background: var(--panel);
+    color: var(--ink-2);
+    border: 1px dashed var(--rule-strong);
   }
 
   .post-meta {

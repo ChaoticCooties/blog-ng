@@ -1,0 +1,42 @@
+---
+import { references } from '../data/references'
+import { used, reset } from '../lib/refs'
+
+const ids = used(Astro.url.pathname)
+reset(Astro.url.pathname)
+---
+
+{ids.length > 0 && (
+  <ol class="reference-list">
+    {ids.map((id) => {
+      const r = references[id]
+      return (
+        <li id={`ref-${id}`}>
+          <a href={r.url} class="reference-title">{r.title}</a>
+          <span class="reference-meta">
+            {[r.authors, r.venue].filter(Boolean).join('. ')}
+            {r.model && <span class="reference-model">{r.model}</span>}
+          </span>
+        </li>
+      )
+    })}
+  </ol>
+)}
+
+<style>
+  .reference-list {
+    list-style: decimal; padding-left: 1.6rem; margin: 0;
+    font-size: 0.9375rem; line-height: 1.5;
+  }
+  .reference-list li { margin-bottom: 0.6rem; }
+  .reference-list li:target { background: var(--fern-wash, #DCE8D9); border-radius: 4px; }
+  .reference-title { font-weight: 500; }
+  .reference-meta {
+    display: block; font-size: 0.875rem; color: var(--ink-3, #56665A);
+  }
+  .reference-model {
+    display: inline-block; margin-left: 0.4rem; padding: 0 0.4rem;
+    border: 1px solid var(--rule-strong, #B9C7B2); border-radius: 999px;
+    font-size: 0.8125rem; color: var(--accent, #36704D);
+  }
+</style>

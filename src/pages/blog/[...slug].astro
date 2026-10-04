@@ -51,10 +51,6 @@ const published = entry.data.date.toLocaleDateString('en-US', {
 
       <dl class="byline">
         <div>
-          <dt>Author</dt>
-          <dd>Chegne Eu Joe</dd>
-        </div>
-        <div>
           <dt>Published</dt>
           <dd><time datetime={entry.data.date.toISOString()}>{published}</time></dd>
         </div>
@@ -401,6 +397,11 @@ const published = entry.data.date.toLocaleDateString('en-US', {
 
   .article-body > :global(.diagram) {
     counter-increment: figure;
+  }
+
+  /* Data figures that are authored at the text measure stay in the text column. */
+  .article-body > :global(.diagram.measure) {
+    grid-column: text;
   }
 
   .article-body :global(.diagram-scroll) {

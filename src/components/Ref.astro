@@ -1,0 +1,63 @@
+---
+import { references } from '../data/references'
+import { cite } from '../lib/refs'
+
+interface Props { id: string }
+const { id } = Astro.props
+const ref = references[id]
+if (!ref) throw new Error(`Ref: unknown reference id "${id}"`)
+const n = cite(Astro.url.pathname, id)
+---
+
+<sup class="ref"
+  ><a href={`#ref-${id}`} class="ref-mark" aria-label={`Reference ${n}: ${ref.title}`}>{n}</a
+  ><span class="ref-card" role="note">
+    <span class="ref-title">{ref.title}</span>
+    {ref.authors && <span class="ref-meta">{ref.authors}</span>}
+    {ref.venue && <span class="ref-meta">{ref.venue}</span>}
+    {ref.model && <span class="ref-model">Measured on {ref.model}</span>}
+    {ref.note && <span class="ref-note">{ref.note}</span>}
+  </span></sup
+>
+
+<style>
+  .ref { position: relative; line-height: 0; white-space: nowrap; }
+  .ref-mark {
+    font-size: 0.72em; font-weight: 600; text-decoration: none;
+    color: var(--accent, #36704D); padding: 0 0.1em;
+    border-bottom: none !important;
+  }
+  .ref-mark::before { content: '['; }
+  .ref-mark::after { content: ']'; }
+  .ref-mark:hover, .ref-mark:focus-visible { text-decoration: underline; }
+
+  .ref-card {
+    position: absolute; z-index: 20; bottom: 1.9em; left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    width: max-content; max-width: min(21rem, 78vw);
+    display: grid; gap: 0.15rem;
+    padding: 0.55rem 0.7rem; white-space: normal; line-height: 1.45;
+    background: var(--paper, #FAFBF7);
+    border: 1px solid var(--rule-strong, #B9C7B2); border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(28, 43, 33, 0.16);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+  }
+  .ref:hover .ref-card,
+  .ref:focus-within .ref-card {
+    opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+  }
+  .ref-title { font-size: 0.8125rem; font-weight: 600; color: var(--ink-2, #435347); }
+  .ref-meta { font-size: 0.75rem; color: var(--ink-3, #56665A); }
+  .ref-model {
+    font-size: 0.75rem; color: var(--accent, #36704D); font-weight: 600;
+  }
+  .ref-note {
+    font-size: 0.75rem; color: var(--ink-3, #56665A);
+    margin-top: 0.15rem; padding-top: 0.3rem;
+    border-top: 1px solid var(--rule, #D6DECF);
+  }
+  @media (hover: none) {
+    .ref-card { display: none; }
+  }
+</style>
