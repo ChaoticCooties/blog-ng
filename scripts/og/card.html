@@ -16,7 +16,16 @@
     --accent: #36704D;
     --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .11 0 0 0 0 .17 0 0 0 0 .13 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
-  body.umbra { --accent: #101112; --mark: #101112; }
+  /* Umbra: the same card in its own charcoal, with neutral greys instead of green. */
+  body.umbra {
+    --bg: #101112;
+    --ink: #F4F5F4;
+    --ink-2: #A9ADAB;
+    --contour: #6B706D;
+    --accent: #F4F5F4;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  body.umbra .field { opacity: 0.55; }
   * { margin: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; overflow: hidden; }
   body {
@@ -46,20 +55,12 @@
     max-width: 800px;
   }
   .mark { width: 104px; height: 104px; margin-left: -8px; }
-  /* Umbra's original white mark on its charcoal brand tile. */
+  /* Umbra's original white mark, straight on the charcoal card. */
   .mark--umbra {
-    display: grid;
-    place-items: center;
-    width: 104px;
-    height: 104px;
+    align-self: flex-start;
+    width: auto;
+    height: 96px;
     margin-left: 0;
-    border-radius: 24px;
-    background: #101112;
-    box-shadow: 0 1px 2px rgb(16 17 18 / 0.18), 0 10px 24px -12px rgb(16 17 18 / 0.45);
-  }
-  .mark--umbra img {
-    width: 62%;
-    height: auto;
     display: block;
   }
   h1 {
@@ -109,7 +110,7 @@
         domain: 'cooties.io',
       },
       umbra: {
-        mark: '<div class="mark mark--umbra" aria-hidden="true"><img src="umbra-mark.png" alt=""></div>',
+        mark: '<img class="mark mark--umbra" src="umbra-mark.png" alt="">',
         title: 'Project Umbra',
         subtitle: 'Disclosure ledger: vulnerabilities found, reported, and disclosed.',
         domain: 'umbra.cooties.io',
