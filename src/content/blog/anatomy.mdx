@@ -1,6 +1,6 @@
 ---
 title: 'Anatomy of a Jailbreak'
-description: 'A meta-analysis of jailbreak tactics and the role of context in multi-turn attacks.'
+description: 'A meta-analysis of jailbreak tactics, why a frame has to fit the request, and the role of context in multi-turn attacks.'
 date: 2026-10-02
 category: 'AI safety'
 tags: ['jailbreaks', 'llm', 'ai-safety', 'redteam', 'interpretability']
@@ -22,6 +22,8 @@ import WrappedControl from '../../components/WrappedControl.astro'
 import Components from '../../components/Components.astro'
 
 AI red teaming has evolved a lot since the early days. Prompts like 'ignore previous instructions', which once worked on frontier models, are now overshadowed by large agentic swarm jailbreaks such as TRACE<Ref id="trace" /> and Boundary Point Jailbreaking<Ref id="boundarypoint" />. Even so, manual red teaming is still a very useful skill against AI-integrated applications and for designing similar infra. In this blog post, we look at several attack strategies on older models. We test them against a meta-analysis of existing papers and run some interpretability experiments to see which approaches work and which don't.
+
+The most useful single-prompt finding is about framing. Wrapping a request in a document it naturally belongs in, like a penetration-test report for an intrusion request, works far better than arguing that the model should comply.
 
 > This isn’t a full survey of the field and rather a collection of field notes from side experiments. Most experiments use `Llama-3.1-8b-Instruct`, and `Qwen2.5-7B-Instruct` is used as a backup to replicate some of the interpretability findings.
 
@@ -60,12 +62,15 @@ We define the first group as "artifact tactics". They ask for a transcript, a sc
 
 Human red-team data points the same way from a completely different direction. Giarrusso's second most-used family<Ref id="guardrails" /> is Persuasion, across 250 dialogues. It works 14.4% of the time, which is below the middle of their own table. Arguing with the model is the most popular thing red teamers do, and one of the least effective.
 
-### Framing fit 
-One may think to just use the highest rated framing against all adversarial requests. However there is a catch, take the recipe artifact for example: Asking for a recipe moves refusal 5 points in the wrong direction. This is because a recipe simply has nothing to do with the requests it was applied to. Generic artifact frames like "a report" or "an account" give 16 and 8 points in the right direction. But pair a narrow frame with the harm category it belongs to, and it works.
+### Framing fit
 
-A penetration-test report is worth 20 points on intrusion requests and 0.6 points on everything else. A news article is worth 23.5 points on misinformation and 4.2 points elsewhere. The frame isn't strong or weak in itself. It’s strong when it’s a plausible container for the thing being asked.
+**The frame has to fit the request.** Ask for a document that the answer you want would plausibly appear in. A frame that doesn't fit does nothing, or works against you.
 
-The practical takeaway here is to select a frame in which the answer you want would most plausibly appear. 
+The recipe frame shows the failure. Asking for a recipe moves refusal 5 points in the wrong direction, because a recipe has nothing to do with the requests it was applied to. Generic frames like "a report" or "an account" are safer, at 16 and 8 points in the right direction, because almost anything can go in a report.
+
+Narrow frames are where fit pays off. A penetration-test report is worth 20 points on intrusion requests and 0.6 points on everything else. A news article is worth 23.5 points on misinformation and 4.2 points elsewhere. Every narrow frame we tested did better on its own kind of request than on anything else. The frame isn't strong or weak in itself. It’s strong when it’s a plausible container for the thing being asked.
+
+So don't pick one best frame and reuse it everywhere. Choose the frame per request: a penetration-test report for intrusion, a news article for misinformation, and a generic report when nothing obvious fits.
 
 That's the logic for frames that describe what the output is. A second kind of instruction ignores content entirely and only dictates how the output looks, and it doesn't need to fit anything.
 
