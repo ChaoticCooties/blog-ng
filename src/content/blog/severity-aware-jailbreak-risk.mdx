@@ -24,7 +24,7 @@ The second warrants much closer scrutiny. The task has potentially much greater 
 
 There are two things to separate here, though: how serious the requested task is, and how much the answer actually helps. A dangerous topic does not make every response useful to an attacker. A numbered procedure does not establish that the instructions are correct or workable. We have not validated the biological example, and its presentation alone cannot tell us what someone could accomplish with it.
 
-That distinction motivated our TARA capstone, which received an honourable mention. We brought together Renegade, an attack targeting internal mechanisms associated with refusal, and an extension of the SABER evaluation workflow. We wanted to examine both what happens when an attacker gets more attempts and how serious the resulting outputs appear.
+That distinction motivated our TARA capstone, which received an honourable mention. The project had two halves: developing Renegade, our attack on internal mechanisms associated with refusal, and extending the SABER workflow to evaluate repeated attempts and the severity of their outputs. This post focuses on the evaluation half.
 
 ## What counts as success
 
@@ -43,6 +43,8 @@ There is a second problem with summarising an evaluation by the average response
 We evaluated 159 requests from the standard functional subset of HarmBench, covering six harm categories. HarmBench provides a common framework for evaluating automated red teaming and refusal robustness. We tested two attack methods against two models, with ten attempts per request: 6,360 responses in total. [HarmBench paper](https://arxiv.org/abs/2402.04249).
 
 The methods were GCG and Renegade. GCG searches for a suffix that makes a chosen compliant response more likely. Renegade instead searches for a suffix that suppresses selected attention heads associated with refusal. Developing the Renegade suffix uses access to model internals; applying an existing suffix only requires appending text to a request.
+
+Renegade is the attack half of the project, and we will give it its own write-up in a future blog post. That post will cover how the attack was developed, how we identified refusal-related heads, and what we learned from the mechanistic experiments. Here, we use Renegade alongside GCG to study how often the tested attacks succeed and what those successes actually contain.
 
 For these runs, we used ten previously selected suffixes from each method. We did not optimise a new attack for every request. Both sets were selected using Llama, so applying them to Gemma was a transfer test.
 
