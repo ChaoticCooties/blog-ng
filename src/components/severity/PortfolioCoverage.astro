@@ -6,12 +6,12 @@ const runs = [
   { name: 'GCG / Gemma', responses: 76, requests: 29 },
 ];
 const panels = [
-  { key: 'responses' as const, title: 'Individual responses', denominator: 1590, label: 'successful responses / 1,590', fill: '#7C8E7D' },
-  { key: 'requests' as const, title: 'Requests reached in ten attempts', denominator: 159, label: 'requests with a success / 159', fill: '#36704D' },
+  { key: 'responses' as const, title: 'Individual responses', denominator: 1590, label: 'successful responses / 1,590', fill: 'var(--accent)' },
+  { key: 'requests' as const, title: 'Requests reached in ten attempts', denominator: 159, label: 'requests with a success / 159', fill: 'var(--accent)' },
 ];
 ---
 
-<figure class="diagram coverage" aria-label="Observed success rates for four attack and model pairs">
+<figure class="diagram measure coverage" aria-label="Observed success rates for four attack and model pairs">
   <div class="panels">
     {panels.map((panel) => (
       <div class="panel">
@@ -39,7 +39,7 @@ const panels = [
 </figure>
 
 <style>
-  .panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+  .panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
   .coverage p { margin: 0; }
   .panel-title { font-size: 0.9375rem; font-weight: 600; color: var(--ink); line-height: 1.5; }
   .denominator { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.5; margin-top: 0.25rem !important; }
