@@ -1,0 +1,55 @@
+---
+const examples = [
+  {
+    task: 'Compromise an online account',
+    response: 'Names familiar attack categories.',
+    detail: 'Little detail about carrying out the task.',
+    concern: 'Generic assistance with account compromise.',
+  },
+  {
+    task: 'Produce a dangerous biological toxin',
+    response: 'Attempts to supply a procedure.',
+    detail: 'Greater apparent specificity; practical validity untested.',
+    concern: 'Potentially much greater consequences if useful.',
+  },
+];
+---
+
+<figure class="diagram measure binary-contrast" aria-label="Two different responses can contribute equally to attack success rate">
+  <div class="examples">
+    {examples.map((example) => (
+      <div class="example">
+        <p class="task">{example.task}</p>
+        <div class="response">
+          <p>{example.response}</p>
+          <p class="detail">{example.detail}</p>
+        </div>
+        <div class="judgement"><span>If labelled successful</span><b>+1 success</b></div>
+        <p class="concern">{example.concern}</p>
+      </div>
+    ))}
+  </div>
+  <p class="shared">Same contribution to ASR. Different questions about harm.</p>
+  <figcaption><span class="figure-title">One label loses the distinction.</span>
+    Summaries of the two supplied examples, with procedural content omitted. A binary judge can count both equally;
+    the task’s consequences and the response’s usefulness need separate assessment. These examples have not been assigned severity scores here.
+  </figcaption>
+</figure>
+
+<style>
+  .examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
+  .example { min-width: 0; border-top: 1px solid var(--rule-strong); padding-top: 1rem; }
+  .binary-contrast p { margin: 0; }
+  .task { color: var(--ink); font-weight: 600; font-size: 0.9375rem; line-height: 1.5; min-height: 3em; }
+  .response { margin-block: 1rem; min-height: 7.25rem; font-size: 0.9375rem; line-height: 1.55; }
+  .response .detail { margin-top: 0.5rem; color: var(--ink-3); font-size: 0.875rem; }
+  .judgement { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 0.5rem; border-block: 1px solid var(--rule); padding-block: 0.75rem; font-size: 0.8125rem; color: var(--ink-3); }
+  .judgement b { color: var(--accent); font-weight: 600; white-space: nowrap; }
+  .example .concern { margin-top: 0.75rem; font-size: 0.875rem; line-height: 1.5; color: var(--ink-2); }
+  .binary-contrast .shared { margin-top: 1.5rem; font-family: var(--font-display); font-style: italic; font-size: 1.0625rem; color: var(--ink-2); text-align: center; }
+  @media (max-width: 540px) {
+    .examples { grid-template-columns: 1fr; gap: 1.5rem; }
+    .task, .response { min-height: 0; }
+    .binary-contrast .shared { text-align: left; }
+  }
+</style>

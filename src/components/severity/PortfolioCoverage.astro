@@ -1,0 +1,54 @@
+---
+const runs = [
+  { name: 'Renegade / Llama', responses: 466, requests: 123 },
+  { name: 'GCG / Llama', responses: 72, requests: 44 },
+  { name: 'Renegade / Gemma', responses: 213, requests: 78 },
+  { name: 'GCG / Gemma', responses: 76, requests: 29 },
+];
+const panels = [
+  { key: 'responses' as const, title: 'Individual responses', denominator: 1590, label: 'successful responses / 1,590', fill: '#7C8E7D' },
+  { key: 'requests' as const, title: 'Requests reached in ten attempts', denominator: 159, label: 'requests with a success / 159', fill: '#36704D' },
+];
+---
+
+<figure class="diagram coverage" aria-label="Observed success rates for four attack and model pairs">
+  <div class="panels">
+    {panels.map((panel) => (
+      <div class="panel">
+        <p class="panel-title">{panel.title}</p>
+        <p class="denominator">{panel.label}</p>
+        <div class="axis" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+        {runs.map((run) => {
+          const count = run[panel.key];
+          const rate = count / panel.denominator * 100;
+          return (
+            <div class="row">
+              <div class="row-label"><span>{run.name}</span><strong>{rate.toFixed(2)}%</strong></div>
+              <div class="track" aria-hidden="true"><div class="bar" style={{ width: `${rate}%`, background: panel.fill }}></div></div>
+              <p class="count">{count.toLocaleString('en')} / {panel.denominator.toLocaleString('en')}</p>
+            </div>
+          );
+        })}
+      </div>
+    ))}
+  </div>
+  <figcaption><span class="figure-title">The full portfolio reaches more requests.</span>
+    Both panels use a 0–100% scale, but their denominators differ: 1,590 individual responses and 159 requests.
+    These are observed results for ten selected suffixes per method, not an estimate of independent random sampling.
+  </figcaption>
+</figure>
+
+<style>
+  .panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+  .coverage p { margin: 0; }
+  .panel-title { font-size: 0.9375rem; font-weight: 600; color: var(--ink); line-height: 1.5; }
+  .denominator { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.5; margin-top: 0.25rem !important; }
+  .axis { display: flex; justify-content: space-between; margin-top: 1.25rem; border-bottom: 1px solid var(--rule-strong); padding-bottom: 0.4rem; color: var(--ink-3); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+  .row { margin-top: 1.25rem; }
+  .row-label { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.875rem; line-height: 1.5; }
+  .row-label strong { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .track { margin-top: 0.375rem; height: 0.875rem; border-inline: 1px solid var(--rule-strong); background: var(--panel); }
+  .bar { height: 100%; }
+  .row .count { margin-top: 0.25rem; font-size: 0.8125rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  @media (max-width: 640px) { .panels { grid-template-columns: 1fr; gap: 2.25rem; } }
+</style>

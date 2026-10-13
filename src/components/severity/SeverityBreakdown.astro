@@ -1,0 +1,55 @@
+---
+// Counts are from the supplied project write-up. Levels 0 and 1 are grouped
+// because their separate counts were not supplied for Renegade / Llama.
+const levels = [
+  { label: 'Scores 0–1', color: 'var(--panel)', ink: 'var(--ink-2)' },
+  { label: 'Score 2', color: 'var(--accent-wash)', ink: 'var(--ink-2)' },
+  { label: 'Score 3', color: 'var(--accent)', ink: 'var(--paper)' },
+];
+const runs = [
+  { name: 'Renegade / Llama', total: 466, counts: [171, 79, 216], note: '295 of 466 binary successes scored 2 or 3.' },
+  { name: 'GCG / Gemma', total: 76, counts: [56, 18, 2], note: '20 of 76 binary successes scored 2 or 3; 52 scored 0.' },
+];
+---
+
+<figure class="diagram measure severity-breakdown" aria-label="Severity distribution among binary successes in two runs">
+  <div class="legend" aria-hidden="true">
+    {levels.map((level) => <span><i style={{ background: level.color }}></i>{level.label}</span>)}
+  </div>
+  {runs.map((run) => (
+    <div class="run">
+      <div class="run-label"><strong>{run.name}</strong><span>{run.total} binary successes</span></div>
+      <div class="stack" role="img" aria-label={`${run.name}: ${run.counts[0]} scores 0 or 1, ${run.counts[1]} score 2, and ${run.counts[2]} score 3, out of ${run.total} binary successes.`}>
+        {run.counts.map((count, i) => (
+          <div class="segment" style={{ flex: `${count} 0 0`, background: levels[i].color, color: levels[i].ink }}>
+            <span aria-hidden="true">{count >= run.total * 0.1 ? count : ''}</span>
+          </div>
+        ))}
+      </div>
+      <div class="distribution">
+        {run.counts.map((count, i) => <span><b>{levels[i].label}:</b> {count} ({(count / run.total * 100).toFixed(1)}%)</span>)}
+      </div>
+      <p class="note">{run.note}</p>
+    </div>
+  ))}
+  <figcaption><span class="figure-title">“Successful” responses have different severity profiles.</span>
+    Each bar represents 100% of that run’s binary successes, not all 1,590 responses. Scores 0 and 1 are grouped;
+    higher scores are rubric judgements, not validated measures of damage. The second run has only two score-3 responses.
+  </figcaption>
+</figure>
+
+<style>
+  .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; color: var(--ink-2); font-size: 0.8125rem; }
+  .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .legend i { width: 0.875rem; height: 0.875rem; border: 1px solid var(--ink-3); }
+  .run { margin-top: 1.75rem; }
+  .run-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1rem; font-size: 0.875rem; line-height: 1.5; }
+  .run-label strong { font-weight: 600; }
+  .run-label > span { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .stack { display: flex; height: 2.5rem; margin-top: 0.625rem; border: 1px solid var(--ink-3); }
+  .segment { display: flex; align-items: center; justify-content: center; min-width: 0; font-size: 0.875rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .segment + .segment { border-left: 2px solid var(--bg); }
+  .distribution { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-top: 0.5rem; font-size: 0.8125rem; line-height: 1.5; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .distribution b { font-weight: 500; }
+  .run .note { margin: 0.625rem 0 0; font-size: 0.875rem; line-height: 1.5; color: var(--ink-2); }
+</style>

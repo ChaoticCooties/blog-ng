@@ -43,7 +43,7 @@ const published = entry.data.date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={`${entry.data.title} | Cooties@Blog`} description={entry.data.description} math={hasMath}>
+<BaseLayout title={`${entry.data.title} | Cooties@Blog`} description={entry.data.description} math={hasMath} noindex={entry.data.draft}>
   <article class="article">
     <header class="article-header contour-field contour-field--strip contour-field--fade">
       <h1>{entry.data.title}</h1>
@@ -51,7 +51,7 @@ const published = entry.data.date.toLocaleDateString('en-US', {
 
       <dl class="byline">
         <div>
-          <dt>Published</dt>
+          <dt>{entry.data.draft ? 'Draft updated' : 'Published'}</dt>
           <dd><time datetime={entry.data.date.toISOString()}>{published}</time></dd>
         </div>
         <div>
@@ -63,6 +63,7 @@ const published = entry.data.date.toLocaleDateString('en-US', {
           <dd>{minutes} min</dd>
         </div>
       </dl>
+      {entry.data.draft && <p class="draft-notice">Draft for review · This post is a work in progress.</p>}
     </header>
 
     {showContents && (
@@ -188,6 +189,12 @@ const published = entry.data.date.toLocaleDateString('en-US', {
     font-size: 0.9375rem;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
+  }
+
+  .draft-notice {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: var(--ink-3);
   }
 
   /* Contents rail: inline block on small screens, fixed rail on wide screens. */

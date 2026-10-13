@@ -1,0 +1,78 @@
+---
+const scores = [0, 0, 0, 0, 0, 0, 3, 0, 0, 0];
+---
+
+<figure class="diagram measure best-of-severity" data-best-of-severity>
+  <p class="example-note">Illustrative sequence, not measured run data.</p>
+  <div class="attempts" role="list" aria-label="Ten illustrative response scores">
+    {scores.map((score, index) => (
+      <div class:list={['attempt', { 'high-score': score === 3 }]} data-score={score} role="listitem" aria-label={`Attempt ${index + 1}: severity ${score}`}>
+        <span class="attempt-number" aria-hidden="true">{index + 1}</span>
+        <span class="score" aria-hidden="true">{score}</span>
+      </div>
+    ))}
+  </div>
+  <div class="control" hidden>
+    <label for="severity-attempts">Attempts included <output for="severity-attempts" data-budget>10</output></label>
+    <input id="severity-attempts" type="range" min="1" max="10" step="1" value="10" aria-describedby="severity-control-help" />
+    <p id="severity-control-help">Move through the sequence to see when the serious response appears.</p>
+  </div>
+  <div class="summary" aria-live="polite" aria-atomic="true">
+    <div><span>Mean score</span><strong data-mean>0.30</strong></div>
+    <div><span>Highest score</span><strong data-maximum>3</strong></div>
+    <div><span>At least one score 3?</span><strong data-reached>Yes</strong></div>
+  </div>
+  <figcaption><span class="figure-title">One serious response survives the average.</span>
+    Nine score-0 responses and one score-3 response average to 0.30, but the attacker can keep the score-3 answer.
+    Averaging ordinal scores here only illustrates dilution; it is not a calibrated risk measure.
+  </figcaption>
+</figure>
+
+<style>
+  .best-of-severity .example-note { margin: 0 0 1.25rem; color: var(--ink-3); font-family: var(--font-display); font-style: italic; font-size: 0.9375rem; }
+  .attempts { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 0.5rem; }
+  .attempt { min-width: 0; text-align: center; }
+  .attempt-number { display: block; font-size: 0.8125rem; color: var(--ink-3); margin-bottom: 0.375rem; font-variant-numeric: tabular-nums; }
+  .score { display: flex; min-height: 2.5rem; align-items: center; justify-content: center; background: var(--panel); border: 1px solid var(--rule-strong); color: var(--ink-2); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+  .high-score .score { color: var(--paper); background: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .attempt.excluded .score { color: transparent; background: transparent; border-style: dashed; }
+  .control { margin-top: 1.5rem; }
+  .control label { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.875rem; color: var(--ink-2); }
+  .control output { color: var(--accent); font-variant-numeric: tabular-nums; font-weight: 600; }
+  .control input { display: block; width: 100%; min-height: 44px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+  .control input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .control p { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.5; margin: 0; }
+  .summary { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 1rem; margin-top: 1.5rem; padding-block: 1rem; border-block: 1px solid var(--rule-strong); }
+  .summary > div { display: grid; gap: 0.375rem; align-content: start; }
+  .summary span { font-size: 0.8125rem; line-height: 1.5; color: var(--ink-3); }
+  .summary strong { font-size: 1.125rem; line-height: 1.5; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+  @media (max-width: 420px) { .attempts { gap: 0.25rem; } .summary { gap: 0.5rem; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-best-of-severity]').forEach((figure) => {
+    const control = figure.querySelector<HTMLElement>('.control');
+    const slider = figure.querySelector<HTMLInputElement>('input');
+    const attempts = [...figure.querySelectorAll<HTMLElement>('[data-score]')];
+    const budget = figure.querySelector<HTMLOutputElement>('[data-budget]');
+    const mean = figure.querySelector<HTMLElement>('[data-mean]');
+    const maximum = figure.querySelector<HTMLElement>('[data-maximum]');
+    const reached = figure.querySelector<HTMLElement>('[data-reached]');
+    if (!control || !slider || !budget || !mean || !maximum || !reached) return;
+    control.hidden = false;
+    const update = () => {
+      const n = Number(slider.value);
+      const scores = attempts.slice(0, n).map((attempt) => Number(attempt.dataset.score));
+      budget.value = String(n);
+      mean.textContent = (scores.reduce((sum, score) => sum + score, 0) / n).toFixed(2);
+      maximum.textContent = String(Math.max(...scores));
+      reached.textContent = scores.some((score) => score === 3) ? 'Yes' : 'No';
+      attempts.forEach((attempt, i) => {
+        attempt.classList.toggle('excluded', i >= n);
+        attempt.setAttribute('aria-label', i >= n ? `Attempt ${i + 1}: not included` : `Attempt ${i + 1}: severity ${attempt.dataset.score}`);
+      });
+    };
+    slider.addEventListener('input', update);
+    update();
+  });
+</script>
