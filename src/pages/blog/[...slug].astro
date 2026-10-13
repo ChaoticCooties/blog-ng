@@ -397,8 +397,14 @@ const published = entry.data.date.toLocaleDateString('en-US', {
     counter-reset: figure;
   }
 
-  .article-body > :global(:is(.diagram, img, p:has(> img:only-child), table)) {
+  .article-body > :global(:is(.diagram, img, p:has(> img:only-child))) {
     grid-column: wide;
+    margin: 1.5rem 0 2.75rem;
+  }
+
+  /* Tables align with the prose; a wide one scrolls rather than breaking out. */
+  .article-body > :global(table) {
+    grid-column: text;
     margin: 1.5rem 0 2.75rem;
   }
 
@@ -459,9 +465,9 @@ const published = entry.data.date.toLocaleDateString('en-US', {
     margin: 0.5rem 0 2rem;
   }
 
+  /* A real table box so the rules span the measure; cells wrap instead of overflowing. */
   .article-body :global(table) {
-    display: block;
-    overflow-x: auto;
+    width: 100%;
     border-collapse: collapse;
     font-family: var(--font-ui);
     font-size: 0.9375rem;
@@ -474,6 +480,12 @@ const published = entry.data.date.toLocaleDateString('en-US', {
     vertical-align: top;
     padding: 0.625rem 1.25rem 0.625rem 0;
     border-bottom: 1px solid var(--rule);
+    overflow-wrap: break-word;
+  }
+
+  .article-body :global(th:last-child),
+  .article-body :global(td:last-child) {
+    padding-right: 0;
   }
 
   .article-body :global(th) {
