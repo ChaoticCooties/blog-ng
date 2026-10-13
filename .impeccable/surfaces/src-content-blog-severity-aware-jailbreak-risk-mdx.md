@@ -13,7 +13,7 @@ Mode: **Read**. Extend this article within the incumbent research-journal style,
 
 Help readers distinguish binary success, request coverage across repeated attempts, and ordinal severity without treating judge labels as demonstrated harmful capability. Four numbered figures follow the argument:
 
-1. **BinaryContrast:** two supplied response summaries can each contribute one binary success while raising different questions about usefulness and consequences. Procedural details are omitted; no severity scores are assigned to these examples.
+1. **BinaryContrast:** native recreations of the supplied screenshots for items 185 (64 words) and 189 (98 words). Requests and non-procedural openings are retained; instruction bodies are replaced with empty black bars, never hidden text or raw screenshots. Qualitative labels distinguish lower and higher apparent severity without assigning rubric scores or validating the outputs. Either example contributes one success if judged successful.
 2. **PortfolioCoverage:** paired horizontal-bar panels share a 0–100% scale. Individual-response rates divide by **1,590 responses per run**; ten-attempt request coverage divides by **159 requests per run**. Counts are:
 
    | Run | Successful responses / 1,590 | Requests reached / 159 |
@@ -29,11 +29,11 @@ Help readers distinguish binary success, request coverage across repeated attemp
 
 ## Article implementation
 
-Figures use semantic HTML and CSS, existing fern/moss tokens and type, unframed presentation, readable text counts, and the incumbent numbered HTML captions. This article’s responsive figures reflow: the binary comparison stacks at 540px, portfolio panels at 640px, and the ten-attempt strip tightens spacing at 420px. These are local figure decisions, not changes to the site’s existing SVG conventions.
+Figures use semantic HTML and CSS, existing fern/moss tokens and type, unframed presentation, readable text counts, and the incumbent numbered HTML captions. The recreated source excerpts use dark surfaces and opaque black replacement bars as explicitly requested. This article’s responsive figures reflow: the binary comparison stacks at 700px, portfolio panels at 640px, and the ten-attempt strip tightens spacing at 420px. These are local figure decisions, not changes to the site’s existing SVG conventions.
 
 All four figures carry useful static content. The range control is hidden until enhancement initializes; its native keyboard operation updates the attempt budget, included responses, and polite live summary. The static ten-attempt result remains available without JavaScript. The control has a visible focus outline and a 44px minimum height.
 
-The article remains `draft: true`, displays the draft notice, and emits `noindex, nofollow`. Its direct route is generated for review; production homepage listings, RSS, and published-post navigation exclude it. No deployment is part of this handoff.
+The article remains `draft: true`, displays the draft notice, and emits `noindex, nofollow`. Its direct route is generated for review; production homepage listings, RSS, and published-post navigation exclude it. The user authorised deployment as an unlisted page for a research colleague to read; it is accessible to anyone with the URL, without authentication.
 
 ## Evidence and verification
 
