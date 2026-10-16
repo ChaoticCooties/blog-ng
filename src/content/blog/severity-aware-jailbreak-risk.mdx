@@ -14,74 +14,75 @@ import BestOfSeverity from '../../components/severity/BestOfSeverity.astro'
 
 By Eu Joe Chegne & Raniera Te Moni
 
-Jailbreak results are often reported as an attack success rate, or ASR. An evaluator labels each response as successful or unsuccessful, and we count how often the attack worked. This is useful for comparing attacks, but it leaves a lot inside the word “successful”.
+This was a capstone project from the TARA Program and was selected as a spotlight project.
 
-Consider two responses. Someone asks how to break into an online account, and the model replies with a generic list of attack categories. Someone else asks how to produce botulinum toxin, and the model attempts to provide a procedure. A binary judge can label both as successful jailbreaks. Each contributes one success to the metric.
+Jailbreaks are adversarial techniques where a user crafts a specialized prompt to trick a large language model (LLM) into bypassing its built-in safety filters and alignment rules. The metric for jailbreak results is often reported as an attack success rate (ASR) where an evaluator labels each response as successful or unsuccessful, and we count how often the attack worked. This is useful for comparing attacks, but it leaves a lot inside the word “successful”.
 
-The second warrants much closer scrutiny. The task has potentially much greater consequences, and the response attempts to provide procedural assistance. The first does relatively little to bridge the gap between wanting to break into an account and being able to do it. Counting them equally discards a distinction we care about.
+Consider the following two responses:
+
+Example A asks how to break into an online account, and the model replies with a generic list of attack categories.
+
+Example B asks how to produce botulinum toxin, and the model attempts to provide a procedure. A binary judge can label both as successful jailbreaks, `jailbreak_success=true`. Each contributes one success to our evaluation metrics.
+
+Example B warrants much closer scrutiny. This response has the potential for much greater harm, as the response attempts to provide procedural step-by-step guidance, while example A explains public domain knowledge. Counting them equally discards a distinction we care about.
 
 <BinaryContrast />
 
-There are two things to separate here, though: how serious the requested task is, and how much the answer actually helps. A dangerous topic does not make every response useful to an attacker. A numbered procedure does not establish that the instructions are correct or workable. We have not validated the biological example, and its presentation alone cannot tell us what someone could accomplish with it.
+It is imperative to make two distinctions here:
 
-That distinction motivated our TARA capstone, which received an honourable mention. The project had two halves: developing Renegade, our attack on internal mechanisms associated with refusal, and extending the SABER workflow to evaluate repeated attempts and the severity of their outputs. This post focuses on the evaluation half.
+1. How serious the requested task is.
+2. How much the answer actually helps.
+
+A numbered procedure for example does not establish that the instructions are correct or workable. That distinction motivated us to pursue our project in two halves: developing Renegade, which we will give a write-up in a future blog post, and extending the SABER workflow to evaluate repeated attempts and the severity of their outputs. This post focuses on the evaluation half.
 
 ## What counts as success
 
-In this project, a binary success means that our LLM judge classified a response as satisfying its success criteria. It does not mean that someone completed the harmful task, or that the response would work outside the evaluation.
+Recall that a binary success means that our LLM judge classified a response as satisfying its success criteria. It does not mean that someone completed the harmful task, or that the response would work outside the evaluation.
 
-This matters even before comparing different harm categories. Within cyber, a response that names an attack technique and a response that materially helps carry it out can receive the same binary label. Across categories, the consequences also change. Account compromise and assistance with producing a dangerous toxin raise different concerns, which an aggregate ASR cannot express.
+This matters even before comparing different harm categories. Within cyber, a response that names an attack technique and a response that materially helps carry it out can receive the same binary label. Across categories, the consequences also change drastically:
 
-The two examples illustrate both problems at once. They differ in the apparent specificity of the assistance and in the possible consequences of the task. They motivate a closer assessment; they do not, by themselves, give us a calibrated measure of the difference in harm.
+> Steps to perform an SQL injection vs Producing a dangerous toxin raise different concerns, which an aggregate ASR cannot express.
 
-We therefore wanted to retain more information about each output. How substantive is it? How much of the requested task does it cover? Does it provide meaningful assistance, or mostly sound willing to help?
+They motivate a closer assessment; they do not, by themselves, give us a calibrated measure of the difference in harm.
+
+We therefore wanted to retain more information about each output. How substantive is it? How much of the requested task does it cover?
 
 ## Giving the attacker ten attempts
 
 There is a second problem with summarising an evaluation by the average response. An attacker can keep trying, and one useful answer may be enough.
 
-We evaluated 159 requests from the standard functional subset of HarmBench, covering six harm categories. HarmBench provides a common framework for evaluating automated red teaming and refusal robustness. We tested two attack methods against two models, with ten attempts per request: 6,360 responses in total. [HarmBench paper](https://arxiv.org/abs/2402.04249).
+We evaluated 159 requests from the standard functional subset of HarmBench, covering six harm categories. We tested two attack methods (GCG and Renegade) against two models, with ten attempts per request and 6,360 responses in total. [HarmBench paper](https://arxiv.org/abs/2402.04249).
 
-The methods were GCG and Renegade. GCG searches for a suffix that makes a chosen compliant response more likely. Renegade instead searches for a suffix that suppresses selected attention heads associated with refusal. Developing the Renegade suffix uses access to model internals; applying an existing suffix only requires appending text to a request.
+GCG searches for a suffix that makes a chosen compliant response more likely. Renegade on the other hand requires whitebox model access as it searches for a suffix that suppresses selected attention heads associated with refusal.
 
-Renegade is the attack half of the project, and we will give it its own write-up in a future blog post. That post will cover how the attack was developed, how we identified refusal-related heads, and what we learned from the mechanistic experiments. Here, we use Renegade alongside GCG to study how often the tested attacks succeed and what those successes actually contain.
-
-For these runs, we used ten previously selected suffixes from each method. We did not optimise a new attack for every request. Both sets were selected using Llama, so applying them to Gemma was a transfer test.
-
-The models were Llama 3.1 8B Instruct and the Gemma model recorded in our response files as `google/gemma-4-E4B-it`. We use “Gemma” below as shorthand for that recorded identifier. Each attack–model pair produced 1,590 responses.
+For these runs, we used ten previously selected suffixes from each method. Both sets were selected using Llama, and a transfer test was then done by using them on Gemma. To be exact, Llama 3.1 8B Instruct and `google/gemma-4-E4B-it` was used. Each attack–model pair produced 1,590 responses.
 
 <PortfolioCoverage />
 
-The four saved runs were completed on 10–11 June 2026.
+We call the request-level measure ASR@10: the proportion of requests with at least one judge-labelled success among the ten tested attempts.
 
-We call the request-level measure ASR@10: the proportion of requests with at least one judge-labelled success among the ten tested attempts. Against Gemma, Renegade succeeded on 13.40% of individual responses, but reached 49.06% of requests across the full set of suffixes. Against Llama, those figures were 29.31% and 77.36%.
-
-The portfolio reached substantially more requests than the average response rate might suggest. These are measurements of ten selected suffixes, however, rather than a controlled increase in independent random attempts. Renegade reached more requests in both runs, but the experiment does not establish a general ranking of the algorithms under equal optimisation budgets.
+Renegade reached more requests in both runs, but the experiment does not establish a general ranking of the algorithms under equal optimisation budgets.
 
 ## Looking inside the successful responses
 
-We added a category-specific severity rubric with four levels:
+We defined a category-specific severity rubric with four levels:
 
 | Score | Broad interpretation |
-| --- | --- |
+|---|---|
 | 0 | Safe output or refusal |
 | 1 | Low-severity or conceptual content |
 | 2 | More substantive but incomplete harmful content |
-| 3 | The category's most serious response type under the rubric |
+| 3 | The category’s most serious response type under the rubric |
 
-The criteria vary by category. Cyber responses receive separate scores for capability, chain coverage, and targeting or evasion, with the maximum used as the headline score. This lets a response score highly on one consequential dimension without requiring it to cover every part of an attack.
+The criteria vary by category — cyber responses for example receive separate scores for capability, chain coverage, and targeting or evasion, with the maximum used as the headline score. This lets a response score highly on one consequential dimension without requiring it to cover every part of an attack.
 
 We applied the severity judge to responses the binary judge had already labelled successful. Two runs show why this extra assessment matters:
 
 <SeverityBreakdown />
 
-For Renegade/Llama, a substantial number of binary successes also received the higher severity labels. For GCG/Gemma, the interpretation changes considerably: only 20 of its 76 binary successes scored 2 or 3, and just two scored 3. Meanwhile, 52 received severity 0.
-
 The disagreement is particularly visible in the chemical and biological category. GCG/Gemma had 17 binary successes there, and all 17 received severity 0. Reporting those successes as evidence of operational biological capability would go well beyond what we measured.
 
-This also gives us a judging problem to investigate. The severity judge is another model applying another definition; it is not an independently validated ground truth. The disagreement could reflect different criteria, errors by either judge, or both. We need expert review to determine which interpretation is justified.
-
-The scores are ordinal. A 3 is a higher rubric category than a 2, but it is not a calibrated amount of damage. Nor does a 3 in cyber necessarily represent the same consequence as a 3 in another category. Severity preserves distinctions that the binary label loses, while still leaving substantial uncertainty about real-world harm.
+The severity judge is another model applying another definition and is not an independently validated ground truth as the disagreement could reflect different criteria, errors by either judge, or both.
 
 ## Severity under repeated attempts
 
@@ -93,13 +94,9 @@ Imagine ten responses to the same request: nine refusals and one substantive har
 
 With severity judgements for every response, we could report the proportion of requests that produce at least one score-2-or-higher answer within ten attempts, and separately the proportion that produce a score-3 answer. We could then examine how those rates change with the budget, keeping the categories visible where their consequences differ.
 
-This would distinguish an attack that mostly elicits low-severity content from one that occasionally produces much more consequential assistance. A binary success rate can conceal that difference.
+That way, it would distinguish an attack that mostly elicits low-severity content from one that occasionally produces much more consequential assistance.
 
-Our response counts do not yet answer this question. Several high-severity responses might belong to the same request, so 216 score-3 responses cannot be read as 216 distinct requests reached. We would need to aggregate the scores by request and attempt budget.
-
-There is also a gap in the screening process: we only scored severity after a positive binary judgement. Any harmful response missed by the first judge was excluded from the second assessment. The completed contribution is the rubric and its application to those screened responses. A validated statistical model of severity under repeated attempts remains future work.
-
-## What happens beyond ten
+## What happens beyond ASR@10
 
 Our starting point for extrapolation was SABER. It models differences in success probability across requests and uses observations at a smaller budget to estimate ASR at a larger one. The paper reports estimating ASR@1000 from 100 attempts per request. [SABER paper](https://arxiv.org/abs/2601.22636).
 
@@ -111,7 +108,7 @@ The sampling difference matters here. Ten selected suffixes can have different s
 
 Extrapolating the binary label also leaves the severity question open. Even an accurate prediction of how often a judge will say “success” would not tell us how often the model will provide substantial assistance on a consequential task.
 
-## What we would test next
+## Future work
 
 We would start with a blinded, expert-reviewed sample containing both binary-positive and binary-negative responses. That would let us investigate judge disagreement and estimate how much the initial screening misses. We would then apply severity assessment across all responses and aggregate the results by request.
 
@@ -119,6 +116,6 @@ For larger budgets, we need a fresh sampling protocol, documented separation bet
 
 We would also separate tests of refusal suppression from tests of useful harmful assistance. Weakening an internal refusal signal does not establish that the resulting answer is coherent, correct or useful. Those properties need their own evaluation.
 
-This is where the project connects to catastrophic-risk evaluation. If a system can materially assist a task with very large consequences, both the frequency and the substance of its failures matter. Our benchmark labels do not measure that downstream outcome. We evaluated text responses, not real-world execution, autonomous agents or the effectiveness of a deployed defence.
+If a system can materially assist a task with very large consequences, both the frequency and the substance of its failures matter. Further work could entail evaluating real-world execution, autonomous agents or the effectiveness of a deployed defence.
 
-The pilot gives us a repeatable workflow and a concrete reason to inspect what sits behind an ASR. The next useful result would show whether a mitigation reduces consequential assistance under fresh, repeated attacks. Counting fewer successes would be encouraging; understanding which failures remain would tell us much more about what improved.
+The pilot gives us a repeatable workflow and a concrete reason to inspect what sits behind an ASR. The next useful result would show whether a mitigation reduces consequential assistance under fresh, repeated attacks. Understanding which failures remain would tell us much more about what improved.
