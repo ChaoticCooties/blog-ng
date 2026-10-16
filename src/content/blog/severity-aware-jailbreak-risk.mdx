@@ -14,15 +14,16 @@ import BestOfSeverity from '../../components/severity/BestOfSeverity.astro'
 
 By Eu Joe Chegne & Raniera Te Moni
 
-This was a capstone project from the TARA Program and was selected as a spotlight project.
+This was a capstone project from the TARA Program and was selected as a spotlight project. Anthropic released a [similar jailbreak framework](https://www.anthropic.com/news/fable-safeguards-jailbreak-framework) shortly after, which addresses our limitations.
 
 Jailbreaks are adversarial techniques where a user crafts a specialized prompt to trick a large language model (LLM) into bypassing its built-in safety filters and alignment rules. The metric for jailbreak results is often reported as an attack success rate (ASR) where an evaluator labels each response as successful or unsuccessful, and we count how often the attack worked. This is useful for comparing attacks, but it leaves a lot inside the word “successful”.
 
 Consider the following two responses:
 
-Example A asks how to break into an online account, and the model replies with a generic list of attack categories.
+- **Example A** asks how to break into an online account, and the model replies with a generic list of attack categories.
+- **Example B** asks how to produce botulinum toxin, and the model attempts to provide a procedure.
 
-Example B asks how to produce botulinum toxin, and the model attempts to provide a procedure. A binary judge can label both as successful jailbreaks, `jailbreak_success=true`. Each contributes one success to our evaluation metrics.
+A binary judge can label both as successful jailbreaks, `jailbreak_success=true`. Each contributes one success to our evaluation metrics.
 
 Example B warrants much closer scrutiny. This response has the potential for much greater harm, as the response attempts to provide procedural step-by-step guidance, while example A explains public domain knowledge. Counting them equally discards a distinction we care about.
 
