@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -45,7 +46,7 @@ const published = entry.data.date.toLocaleDateString('en-US', {
 
 <BaseLayout title={`${entry.data.title} | Cooties@Blog`} description={entry.data.description} math={hasMath} noindex={entry.data.draft}>
   <article class="article">
-    <header class="article-header contour-field contour-field--strip contour-field--fade">
+    <header class:list={['article-header', !entry.data.cover && 'contour-field contour-field--strip contour-field--fade']}>
       <h1>{entry.data.title}</h1>
       <p class="standfirst">{entry.data.description}</p>
 
@@ -64,6 +65,18 @@ const published = entry.data.date.toLocaleDateString('en-US', {
         </div>
       </dl>
       {entry.data.draft && <p class="draft-notice">Draft for review · This post is a work in progress.</p>}
+
+      {entry.data.cover && (
+        <div class="article-cover">
+          <Image
+            src={entry.data.cover}
+            alt={entry.data.coverAlt}
+            widths={[640, 960, 1536]}
+            sizes="(max-width: 1000px) 100vw, 960px"
+            loading="eager"
+          />
+        </div>
+      )}
     </header>
 
     {showContents && (
@@ -195,6 +208,20 @@ const published = entry.data.date.toLocaleDateString('en-US', {
     margin-top: 1rem;
     font-size: 0.875rem;
     color: var(--ink-3);
+  }
+
+  /* A cover replaces the contour strip: the header drops the texture and the image
+     takes the wide column below the byline, at its own aspect ratio. */
+  .article-header > .article-cover {
+    grid-column: wide;
+    margin-block: 2.5rem 2.75rem;
+  }
+
+  .article-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
   }
 
   /* Contents rail: inline block on small screens, fixed rail on wide screens. */

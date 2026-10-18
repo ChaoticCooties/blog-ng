@@ -43,7 +43,10 @@
           "type": "boolean",
           "default": false
         },
-        "$schema": {
+        "cover": {
+          "type": "string"
+        },
+        "coverAlt": {
           "type": "string"
         }
       },
