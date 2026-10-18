@@ -196,6 +196,12 @@ export const references: Record<string, Reference> = {
     authors: 'Feng et al.',
     url: 'https://arxiv.org/abs/2601.22636',
   },
+  ranieraversion: {
+    title: 'What an attack success rate leaves out',
+    authors: 'Raniera Te Moni',
+    venue: 'rtemoni.net',
+    url: 'https://rtemoni.net/updates/severity-aware-jailbreak-risk',
+  },
   anthropicseverity: {
     title: 'Fable 5’s cyber safeguards and our jailbreak framework',
     authors: 'Anthropic',
