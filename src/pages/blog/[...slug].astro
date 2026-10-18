@@ -26,6 +26,9 @@ export async function getStaticPaths() {
 const { entry, older, newer } = Astro.props;
 const { Content, headings } = await entry.render();
 
+// Vertical anchor for the cover crop, as an object-position percentage.
+const coverY = { top: '0%', center: '50%', bottom: '100%' };
+
 const WORDS_PER_MINUTE = 230;
 const MIN_SECTIONS_FOR_CONTENTS = 3;
 
@@ -46,7 +49,18 @@ const published = entry.data.date.toLocaleDateString('en-US', {
 
 <BaseLayout title={`${entry.data.title} | Cooties@Blog`} description={entry.data.description} math={hasMath} noindex={entry.data.draft}>
   <article class="article">
-    <header class:list={['article-header', !entry.data.cover && 'contour-field contour-field--strip contour-field--fade']}>
+    <header class:list={['article-header', entry.data.cover ? 'article-header--cover' : 'contour-field contour-field--strip contour-field--fade']}>
+      {entry.data.cover && (
+        <div class="article-cover" style={`--cover-y: ${coverY[entry.data.coverFocus]}`}>
+          <Image
+            src={entry.data.cover}
+            alt={entry.data.coverAlt}
+            widths={[640, 960, 1280, 1672]}
+            sizes="(max-width: 1000px) 100vw, 960px"
+            loading="eager"
+          />
+        </div>
+      )}
       <h1>{entry.data.title}</h1>
       <p class="standfirst">{entry.data.description}</p>
 
@@ -66,17 +80,6 @@ const published = entry.data.date.toLocaleDateString('en-US', {
       </dl>
       {entry.data.draft && <p class="draft-notice">Draft for review · This post is a work in progress.</p>}
 
-      {entry.data.cover && (
-        <div class="article-cover">
-          <Image
-            src={entry.data.cover}
-            alt={entry.data.coverAlt}
-            widths={[640, 960, 1536]}
-            sizes="(max-width: 1000px) 100vw, 960px"
-            loading="eager"
-          />
-        </div>
-      )}
     </header>
 
     {showContents && (
@@ -210,18 +213,50 @@ const published = entry.data.date.toLocaleDateString('en-US', {
     color: var(--ink-3);
   }
 
-  /* A cover replaces the contour strip: the header drops the texture and the image
-     takes the wide column below the byline, at its own aspect ratio. */
+  /* A cover replaces the contour strip. It sits where the texture sat, at the top of the
+     header, inside the wide column so the contents rail stays clear, and dissolves on every
+     edge so it reads as part of the page rather than a framed image. The text below stays
+     on clean paper. */
+  .article-header--cover {
+    padding-top: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  }
+
   .article-header > .article-cover {
     grid-column: wide;
-    margin-block: 2.5rem 2.75rem;
+    aspect-ratio: 16 / 5;
+    margin-bottom: 0.5rem;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent),
+      linear-gradient(transparent, #000 10%, #000 55%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent),
+      linear-gradient(transparent, #000 10%, #000 55%, transparent);
+    mask-composite: intersect;
   }
 
   .article-cover :global(img) {
     display: block;
     width: 100%;
-    height: auto;
-    border-radius: 12px;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% var(--cover-y, 50%);
+  }
+
+  /* On phones a short cropped band is too thin to read, so the cover becomes an ordinary
+     full image: uncropped, with no fade. */
+  @media (max-width: 700px) {
+    .article-header > .article-cover {
+      aspect-ratio: auto;
+      margin-bottom: 1.5rem;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .article-cover :global(img) {
+      height: auto;
+      border-radius: 12px;
+    }
   }
 
   /* Contents rail: inline block on small screens, fixed rail on wide screens. */

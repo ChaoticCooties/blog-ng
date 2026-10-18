@@ -48,6 +48,15 @@
         },
         "coverAlt": {
           "type": "string"
+        },
+        "coverFocus": {
+          "type": "string",
+          "enum": [
+            "top",
+            "center",
+            "bottom"
+          ],
+          "default": "center"
         }
       },
       "required": [

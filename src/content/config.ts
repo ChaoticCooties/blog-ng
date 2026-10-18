@@ -14,6 +14,8 @@ const blog = defineCollection({
         // Optional header image. When set, it replaces the header's contour strip.
         cover: image().optional(),
         coverAlt: z.string().optional(),
+        // Which part of the cover the header shows. The band is wide and short, so it crops.
+        coverFocus: z.enum(['top', 'center', 'bottom']).default('center'),
       })
       .refine((post) => !post.cover || post.coverAlt, {
         message: 'coverAlt is required when cover is set',
