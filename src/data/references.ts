@@ -186,4 +186,19 @@ export const references: Record<string, Reference> = {
     note: 'Black-box search for prompts near a safety classifier’s decision boundary.',
     url: 'https://www.aisi.gov.uk/blog/boundary-point-jailbreaking-a-new-way-to-break-the-strongest-ai-defences',
   },
+  harmbench: {
+    title: 'HarmBench: A Standardized Evaluation Framework for Automated Red Teaming and Robust Refusal',
+    authors: 'Mazeika et al.',
+    url: 'https://arxiv.org/abs/2402.04249',
+  },
+  saber: {
+    title: 'Statistical Estimation of Adversarial Risk in Large Language Models under Best-of-N Sampling',
+    authors: 'Feng et al.',
+    url: 'https://arxiv.org/abs/2601.22636',
+  },
+  anthropicseverity: {
+    title: 'Fable 5’s cyber safeguards and our jailbreak framework',
+    authors: 'Anthropic',
+    url: 'https://www.anthropic.com/news/fable-safeguards-jailbreak-framework',
+  },
 }

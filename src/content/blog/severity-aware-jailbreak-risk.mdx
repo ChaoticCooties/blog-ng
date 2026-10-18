@@ -1,37 +1,43 @@
 ---
 title: 'What an attack success rate leaves out'
 description: 'Measuring repeated jailbreak attempts and the severity of what comes back.'
-date: 2026-10-13
+date: "2026-06-13"
 category: 'AI safety'
 tags: ['jailbreaks', 'llm', 'ai-safety', 'evaluation', 'severity']
-draft: true
+draft: false
 ---
 
 import BinaryContrast from '../../components/severity/BinaryContrast.astro'
 import PortfolioCoverage from '../../components/severity/PortfolioCoverage.astro'
 import SeverityBreakdown from '../../components/severity/SeverityBreakdown.astro'
 import BestOfSeverity from '../../components/severity/BestOfSeverity.astro'
+import Ref from '../../components/Ref.astro'
+import References from '../../components/References.astro'
+import { Image } from 'astro:assets'
+import cover from '../../assets/severity-cover.webp'
+
+<Image src={cover} alt="Cover graphic titled Beyond ASR: What an attack success rate leaves out. Rows of repeated attempts feed a network, and one red output stands apart from five grey ones." widths={[640, 960, 1536]} sizes="(max-width: 1000px) 100vw, 960px" class="lead-image" style="aspect-ratio: 1672 / 941" loading="eager" />
 
 By Eu Joe Chegne & Raniera Te Moni
 
-This was a capstone project from the TARA Program and was selected as a spotlight project. Anthropic released a [similar jailbreak framework](https://www.anthropic.com/news/fable-safeguards-jailbreak-framework) shortly after, which addresses our limitations.
+This was a capstone project from the TARA Program and was awarded as a spotlight project. Shortly after our publication, Anthropic released a similar jailbreak framework<Ref id="anthropicseverity" /> which addresses our limitations.
 
 Jailbreaks are adversarial techniques where a user crafts a specialized prompt to trick a large language model (LLM) into bypassing its built-in safety filters and alignment rules. The metric for jailbreak results is often reported as an attack success rate (ASR) where an evaluator labels each response as successful or unsuccessful, and we count how often the attack worked. This is useful for comparing attacks, but it leaves a lot inside the word “successful”.
 
-Consider the following two responses:
+Consider the two responses below:
 
 - **Example A** asks how to break into an online account, and the model replies with a generic list of attack categories.
 - **Example B** asks how to produce botulinum toxin, and the model attempts to provide a procedure.
 
-A binary judge can label both as successful jailbreaks, `jailbreak_success=true`. Each contributes one success to our evaluation metrics.
+A binary judge can label both as successful jailbreaks, `jailbreak_attempt=pass`. Each contributes one success to our evaluation metrics.
 
-Example B warrants much closer scrutiny. This response has the potential for much greater harm, as the response attempts to provide procedural step-by-step guidance, while example A explains public domain knowledge. Counting them equally discards a distinction we care about.
+Example B warrants much closer scrutiny. This response has the potential for much greater harm, as the response attempts to provide procedural step-by-step guidance, while Example A explains public domain knowledge. Counting them equally discards a distinction we care about.
 
 <BinaryContrast />
 
 It is imperative to make two distinctions here: how serious the requested task is, and how much the answer actually helps.
 
-A numbered procedure for example does not establish that the instructions are correct or workable. That distinction motivated us to pursue our project in two halves: developing Renegade, which we will give a write-up in a future blog post, and extending the SABER workflow to evaluate repeated attempts and the severity of their outputs. This post focuses on the evaluation half.
+A numbered procedure for example does not establish that the instructions are correct or workable. That distinction motivated us to pursue our project in two halves: developing Renegade, which we will give a write-up in a future blog post, and extending the SABER workflow<Ref id="saber" /> to evaluate repeated attempts and the severity of their outputs. This post focuses on the evaluation half.
 
 ## What counts as success
 
@@ -39,9 +45,9 @@ Recall that a binary success means that our LLM judge classified a response as s
 
 This matters even before comparing different harm categories. Within cyber, a response that names an attack technique and a response that materially helps carry it out can receive the same binary label. Across categories, the consequences also change drastically:
 
-> Steps to perform an SQL injection vs Producing a dangerous toxin raise different concerns, which an aggregate ASR cannot express.
+> Steps to perform an SQL injection versus producing a dangerous toxin raise different concerns, which an aggregate ASR cannot express.
 
-They motivate a closer assessment; they do not, by themselves, give us a calibrated measure of the difference in harm.
+They motivate a closer assessment. They do not, by themselves, give us a calibrated measure of the difference in harm.
 
 We therefore wanted to retain more information about each output. How substantive is it? How much of the requested task does it cover?
 
@@ -49,11 +55,11 @@ We therefore wanted to retain more information about each output. How substantiv
 
 There is a second problem with summarising an evaluation by the average response. An attacker can keep trying, and one useful answer may be enough.
 
-We evaluated 159 requests from the standard functional subset of HarmBench, covering six harm categories. We tested two attack methods (GCG and Renegade) against two models, with ten attempts per request and 6,360 responses in total. [HarmBench paper](https://arxiv.org/abs/2402.04249).
+We evaluated 159 requests from the standard functional subset of HarmBench<Ref id="harmbench" />, covering six harm categories. We tested two attack methods (GCG and Renegade) against two models, with ten attempts per request and 6,360 responses in total.
 
 GCG searches for a suffix that makes a chosen compliant response more likely. Renegade on the other hand requires whitebox model access as it searches for a suffix that suppresses selected attention heads associated with refusal.
 
-For these runs, we used ten previously selected suffixes from each method. Both sets were selected using Llama, and a transfer test was then done by using them on Gemma. To be exact, Llama 3.1 8B Instruct and `google/gemma-4-E4B-it` was used. Each attack–model pair produced 1,590 responses.
+For these runs, we used ten previously selected suffixes from each method. Both sets were selected using Llama, and a transfer test was then done by using them on Gemma. To be exact, Llama 3.1 8B Instruct and `google/gemma-4-E4B-it` were used. Each attack–model pair produced 1,590 responses.
 
 <PortfolioCoverage />
 
@@ -72,13 +78,13 @@ We defined a category-specific severity rubric with four levels:
 | 2 | More substantive but incomplete harmful content |
 | 3 | The category’s most serious response type under the rubric |
 
-The criteria vary by category — cyber responses for example receive separate scores for capability, chain coverage, and targeting or evasion, with the maximum used as the headline score. This lets a response score highly on one consequential dimension without requiring it to cover every part of an attack.
+The criteria vary by category. Cyber responses, for example, receive separate scores for capability, chain coverage, and targeting or evasion, with the maximum used as the headline score. This lets a response score highly on one consequential dimension without requiring it to cover every part of an attack.
 
 We applied the severity judge to responses the binary judge had already labelled successful. Two runs show why this extra assessment matters:
 
 <SeverityBreakdown />
 
-The disagreement is particularly visible in the chemical and biological category. GCG/Gemma had 17 binary successes there, and all 17 received severity 0. Reporting those successes as evidence of operational biological capability would go well beyond what we measured.
+The disagreement is particularly visible in the chemical and biological category. GCG / Gemma had 17 binary successes there, and all 17 received severity 0. Reporting those successes as evidence of operational biological capability would go well beyond what we measured.
 
 The severity judge is another model applying another definition and is not an independently validated ground truth as the disagreement could reflect different criteria, errors by either judge, or both.
 
@@ -96,9 +102,9 @@ That way, it would distinguish an attack that mostly elicits low-severity conten
 
 ## What happens beyond ASR@10
 
-Our starting point for extrapolation was SABER. It models differences in success probability across requests and uses observations at a smaller budget to estimate ASR at a larger one. The paper reports estimating ASR@1000 from 100 attempts per request. [SABER paper](https://arxiv.org/abs/2601.22636).
+Our starting point for extrapolation was SABER. It models differences in success probability across requests and uses observations at a smaller budget to estimate ASR at a larger one. The paper reports estimating ASR@1000 from 100 attempts per request.<Ref id="saber" />
 
-One motivation is the observed-zero problem. If a request has no successes in ten attempts, using its observed success fraction as its true probability assigns it zero future risk. SABER instead fits a distribution across requests, allowing nonzero estimates for requests with no observed successes. Its formulation assumes independent attempts with a fixed success probability for each request. [SABER method](https://arxiv.org/html/2601.22636v1).
+One motivation is the observed-zero problem. If a request has no successes in ten attempts, using its observed success fraction as its true probability assigns it zero future risk. SABER instead fits a distribution across requests, allowing nonzero estimates for requests with no observed successes. Its formulation assumes independent attempts with a fixed success probability for each request.<Ref id="saber" />
 
 Our report contains exploratory anchored ASR@1000 estimates ranging from roughly 47% to almost 100%. These are fitted projections. We did not collect a thousand attempts per request or an independent large-budget validation set.
 
@@ -108,12 +114,16 @@ Extrapolating the binary label also leaves the severity question open. Even an a
 
 ## Future work
 
-We would start with a blinded, expert-reviewed sample containing both binary-positive and binary-negative responses. That would let us investigate judge disagreement and estimate how much the initial screening misses. We would then apply severity assessment across all responses and aggregate the results by request.
+Future evaluations could start with a blinded, expert-reviewed sample containing both binary-positive and binary-negative responses. This would help investigate judge disagreement and estimate how much the initial screening misses. Severity assessment could then be applied across all responses, with results aggregated by request.
 
-For larger budgets, we need a fresh sampling protocol, documented separation between attack selection and evaluation, and held-out attempts to test the predictions. The relevant check is whether the estimated rates match what we subsequently observe, including at the higher severity thresholds.
+Evaluations at larger budgets need a fresh sampling protocol, documented separation between attack selection and evaluation, and held-out attempts to test the predictions. The relevant check is whether the estimated rates match subsequent observations, including at the higher severity thresholds.
 
-We would also separate tests of refusal suppression from tests of useful harmful assistance. Weakening an internal refusal signal does not establish that the resulting answer is coherent, correct or useful. Those properties need their own evaluation.
+Tests of refusal suppression should also be separated from tests of useful harmful assistance. Weakening an internal refusal signal does not establish that the resulting answer is coherent, correct or useful. Those properties need their own evaluation.
+
+Anthropic’s proposed cyber jailbreak severity framework<Ref id="anthropicseverity" /> offers a useful direction for future work. It assesses capability gain over existing tools, breadth of that gain, ease of weaponization and discoverability. These dimensions extend the assessment beyond the substance of a response to the capability an attacker can actually obtain from a jailbreak. Future evaluations could use them to refine cyber severity rubrics, supported by expert review and comparisons against existing tools. The framework is still a proposal focused on cyber. Validating judges, assessing other harm categories and testing larger-budget predictions remain separate research tasks.
 
 If a system can materially assist a task with very large consequences, both the frequency and the substance of its failures matter. Further work could entail evaluating real-world execution, autonomous agents or the effectiveness of a deployed defence.
 
-The pilot gives us a repeatable workflow and a concrete reason to inspect what sits behind an ASR. The next useful result would show whether a mitigation reduces consequential assistance under fresh, repeated attacks. Understanding which failures remain would tell us much more about what improved.
+## References
+
+<References />
