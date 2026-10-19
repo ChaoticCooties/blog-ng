@@ -33,7 +33,7 @@ const siteUrl = Astro.site || 'https://cooties.io';
 const GITHUB_URL = 'https://github.com/chaoticcooties';
 const LINKEDIN_URL = 'https://www.linkedin.com/in/joechegne';
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
-const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
+const imageUrl = new URL(image, siteUrl).href;
 const path = Astro.url.pathname;
 const isResearch = path === '/' || path.startsWith('/blog');
 const isAbout = path.startsWith('/about');
